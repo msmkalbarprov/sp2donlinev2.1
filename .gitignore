@@ -16,3 +16,10 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 /vendor/
+
+# Ignore config file
+application/config/config.php
+application/config/database.php
+.htaccess
+index.php
+application/session/*
