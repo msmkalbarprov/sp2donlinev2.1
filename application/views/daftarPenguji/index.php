@@ -704,7 +704,7 @@ function activaTab(tab){
   //     {
        Swal.fire({
                 title: 'Yakin untuk proses pencairan No Penguji :  '+nouji+' ?',
-                text: "etelah kode otp terkirim, maka pencairan sp2d terproses secara otomatis dan tidak bisa dibatalkan!",
+                text: "Setelah kode otp terkirim, maka pencairan sp2d terproses secara otomatis dan tidak bisa dibatalkan!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -749,7 +749,10 @@ function activaTab(tab){
                                     //         'success'
                                     //       )
 
-                                          kembali2(); 
+                                          kembali2();
+                                        document.getElementById('noadvicesotp').value='';
+                                        document.getElementById('noadvicesotp1').value='';
+                                        document.getElementById('otp').value=''; 
 
                                 } else if(status == false || status == 'false'){ 
                                      Swal.fire({
