@@ -243,7 +243,8 @@
                                                                     <div class="col-lg-4">
                                                                         <div class="mb-3">
                                                                             <label for="userName" class="form-label">Nomor Penguji<span class="text-danger">*</span></label>
-                                                                            <input type="text" name="noadvices" class="form-control" id="noadvices" readonly="true"/>
+                                                                            <input type="text" name="noadvicesotp" class="form-control" id="noadvicesotp" readonly="true"/>
+                                                                            <input type="hidden" name="noadvicesotp1" class="form-control" id="noadvicesotp1" readonly="true"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-4">
@@ -368,6 +369,8 @@ var table = $('#datatablepenguji').DataTable( {
         document.getElementById("sumbertab").value = '1';
         document.getElementById("no_uji").value = noadvices;
         document.getElementById("no_uji_kirim").value = noadvices;
+        document.getElementById("noadvicesotp").value = noadvices;
+        document.getElementById("noadvicesotp1").value = noadvices;
         document.getElementById("tgl_uji").value = tgl_uji;
         document.getElementById("nilai_uji").value = number_format(nilai_uji,"2",",",".");;
         
@@ -652,6 +655,7 @@ function activaTab(tab){
                                         'success'
                                     )
                                     document.getElementById("otp").value = "";
+                                    
                                     activaTab('kirim-b1')
                                 }else{ 
                                     message = data.message;
@@ -674,7 +678,7 @@ function activaTab(tab){
     }
 
     function kirimotp() {
-    var nouji = document.getElementById('noadvices').value;
+    var nouji = document.getElementById('noadvicesotp').value;
     var kode_otp = document.getElementById('otp').value;
 
     if (kode_otp.length<6){
