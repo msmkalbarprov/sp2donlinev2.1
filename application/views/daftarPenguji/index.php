@@ -752,7 +752,9 @@ function activaTab(tab){
                                           kembali2();
                                         document.getElementById('noadvicesotp').value='';
                                         document.getElementById('noadvicesotp1').value='';
-                                        document.getElementById('otp').value=''; 
+                                        document.getElementById('otp').value='';
+                                        table.ajax.reload()
+                                        table3.ajax.reload() 
 
                                 } else if(status == false || status == 'false'){ 
                                      Swal.fire({

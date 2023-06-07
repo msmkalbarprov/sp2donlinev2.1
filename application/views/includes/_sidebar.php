@@ -51,8 +51,7 @@ $cur_tab = $this->uri->segment(2)==''?'dashboard': $this->uri->segment(2);
                             ?>
 
                                   <?php if($this->rbac->check_module_permission($nav['controller_name'])): ?> 
-                                  <?php endif; ?>
-                                    <!-- menu -->
+                                      <!-- menu -->
                                     <li >
                                         <?php 
                                           if($has_submenu){
@@ -91,6 +90,8 @@ $cur_tab = $this->uri->segment(2)==''?'dashboard': $this->uri->segment(2);
                                         <?php endif; ?>
                                         <!-- /sub-menu -->
                                       </li>
+                                  <?php endif; ?>
+                                    
                                     <!-- end menu -->
                               <?php endforeach; ?>
                         </ul>
