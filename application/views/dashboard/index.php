@@ -20,7 +20,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">Penguji (Offline) </h5>
-                                                <h2 class="fw-normal mb-1"> <?= $all_advices_offline; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $all_advices_offline; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -35,7 +35,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">SP2D Cair/Terbit </h5>
-                                                <h2 class="fw-normal mb-1"> <?= $sent_sp2d.'/'.$sp2d_advices; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $sent_sp2d.'/'.$sp2d_advices; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -50,7 +50,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">SP2D pending</h5>
-                                                <h2 class="fw-normal mb-1"> <?= $sp2d_pending; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $sp2d_pending; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +65,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">SP2D Gagal</h5>
-                                                <h2 class="fw-normal mb-1"> <?= $sp2d_gagal; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $sp2d_gagal; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -83,7 +83,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">Penguji (Online) </h5>
-                                                <h2 class="fw-normal mb-1"> <?= $all_advices_online; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $all_advices_online; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">Pajak terbayar</h5>
-                                                <h2 class="fw-normal mb-1"> <?= $pajak_sukses; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $pajak_sukses; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">Pajak pending</h5>
-                                                <h2 class="fw-normal mb-1"> <?= $pajak_pending; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $pajak_pending; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="mt-0 mb-1">Pajak Gagal</h5>
-                                                <h2 class="fw-normal mb-1"> <?= $pajak_gagal; ?> </h2>
+                                                <h3 class="fw-normal mb-1"> <?= $pajak_gagal; ?> </h3>
                                             </div>
                                         </div>
                                     </div>
