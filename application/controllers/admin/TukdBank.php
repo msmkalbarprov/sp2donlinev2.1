@@ -436,7 +436,7 @@ function get_token(){
 		if($tot==0){
 			$data = array(
 				'status' 		=> false,
-				'message' 		=> 'SP2D belum divalidasi atau sudah diproses !!'
+				'message' 		=> 'SP2D belum diverifikasi atau sudah diproses !!'
 			);
 			header('Content-Type: application/json');
 			echo json_encode($data);
@@ -996,6 +996,9 @@ function kirimotp(){
                      // 2022 query jurnal
 				$sukses=++$sukses;
 			}else if($result===11 || $result==='11'){
+				$hasil3=$this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
+				$nouji=$hasil3->row()->no_uji;
+
 				$this->db->set('status_bud', 1);  //1 cair bud 2 pending
 				$this->db->set('no_kas_bud', $this->sp2d_model->get_no_kas_bud());
 				$this->db->set('tgl_kas_bud', $date);
@@ -1015,6 +1018,9 @@ function kirimotp(){
                      // 2022 query jurnal
 				$pending=++$pending;
 			}else{
+				$hasil3=$this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
+				$nouji=$hasil3->row()->no_uji;
+				
 				$gagal=++$gagal;
 				$this->db->set('status', 3); //3 gagal 4 pending 
 				$this->db->set('ket_payment', $message);

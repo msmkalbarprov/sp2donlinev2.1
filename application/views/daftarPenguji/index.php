@@ -19,23 +19,23 @@
                                                     Detail penguji
                                                 </a>
                                             </li> -->
-                                            <li class="nav-item showa ctive">
+                                            <li class="nav-item show active">
                                                 <a href="#daftarpenguji" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
                                                     Daftar penguji
                                                 </a>
                                             </li>
-                                            <li class="nav-item showa ctive">
-                                                <a href="#detail-p1" data-bs-toggle="tab" aria-expanded="false" class="nav-link ">
+                                            <li class="nav-item">
+                                                <a href="#detail-p1" data-bs-toggle="tab" aria-expanded="false" class="nav-link disabled ">
                                                     Detail penguji
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#detail-s1" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                                <a href="#detail-s1" data-bs-toggle="tab" aria-expanded="false" class="nav-link disabled">
                                                     Detail SP2D
                                                 </a>
                                             </li>
                                             <li class="nav-item">
-                                                <a href="#kirim-b1" data-bs-toggle="tab" aria-expanded="false" class="nav-link">
+                                                <a href="#kirim-b1" data-bs-toggle="tab" aria-expanded="false" class="nav-link disabled">
                                                     Verifikasi
                                                 </a>
                                             </li>
