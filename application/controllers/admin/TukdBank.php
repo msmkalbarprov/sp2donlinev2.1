@@ -56,7 +56,7 @@ public function controller_method( )
             $no++;
 
 			if ($dataPenguji->status_bank == null || $dataPenguji->status_bank == 0){
-				$status='<div class="text-center"><span class="badge bg-info" > Belum Verifikasi</span></div>';
+				$status='<div class="text-center"><span class="badge bg-dark" > Belum Verifikasi</span></div>';
 				$status2="Belum Verifikasi";
 			  }else if ($dataPenguji->status_bank =='1'){
 				$status='<div class="text-center"><span class="badge bg-primary" > Terverifikasi</span></div>';
@@ -743,16 +743,14 @@ function get_sp2d($no='',$nouji='')
 		curl_close($curl);
 		$output = json_decode($response);
 		
-		$status  = $output->status;
-			if($status==true){
+		// $status  = $output->status;
+			// if($status==true){
 
-				// $query ="UPDATE trhuji SET status_bank='2' where no_uji='$nouji'";
-                    // $asg = $this->db->query($query);
+			// 	// $query ="UPDATE trhuji SET status_bank='2' where no_uji='$nouji'";
+            //         // $asg = $this->db->query($query);
 
-                $this->db->set('status_bank', 2); //status proses bank
-				$this->db->where('no_uji', $nouji);
-				$this->db->update('trhuji');
-			}
+                
+			// }
 		
 
 		echo $response; 
@@ -1010,9 +1008,9 @@ function kirimotp(){
 				$this->db->update('trduji');
 
 				
-				// $this->db->set('status_bank', 3);
-				// $this->db->where('no_uji', $nouji);
-				// $this->db->update('trhuji');
+				$this->db->set('status_bank', 2);
+				$this->db->where('no_uji', $nouji);
+				$this->db->update('trhuji');
 
                      // 2022 query jurnal
 				$pending=++$pending;
@@ -1022,6 +1020,10 @@ function kirimotp(){
 				$this->db->set('ket_payment', $message);
 				$this->db->where('no_sp2d', $no_sp2d);
 				$this->db->update('trduji');
+
+				$this->db->set('status_bank', 5); //status proses bank
+				$this->db->where('no_uji', $nouji);
+				$this->db->update('trhuji');
 			}
 			// $output->data[0]->sppd[0]->mpn->detailPotonganMpn as $hasil2
 			foreach ($hasil->mpn->detailPotonganMpn as $hasil2){
