@@ -56,7 +56,7 @@ public function controller_method( )
             $no++;
 
 			if ($dataPenguji->status_bank == null || $dataPenguji->status_bank == 0){
-				$status='<div class="text-center"><span class="badge bg-warning" > Belum Verifikasi</span></div>';
+				$status='<div class="text-center"><span class="badge bg-info" > Belum Verifikasi</span></div>';
 				$status2="Belum Verifikasi";
 			  }else if ($dataPenguji->status_bank =='1'){
 				$status='<div class="text-center"><span class="badge bg-primary" > Terverifikasi</span></div>';
@@ -109,7 +109,7 @@ public function controller_method( )
             $no++;
 
 			if ($dataPenguji->status_bank == null || $dataPenguji->status_bank == 0){
-				$status='<div class="text-center"><span class="badge bg-warning" > Belum Verifikasi</span></div>';
+				$status='<div class="text-center"><span class="badge bg-info" > Belum Verifikasi</span></div>';
 				$status2="Belum Verifikasi";
 			  }else if ($dataPenguji->status_bank =='1'){
 				$status='<div class="text-center"><span class="badge bg-primary" > Terverifikasi</span></div>';
