@@ -748,13 +748,13 @@ function activaTab(tab){
                                     //         'SP2D Berhasil: '+data.sukses+'<br>SP2D Pending: '+data.pending+'<br>SP2D Gagal: '+data.gagal+'<br>Pajak Berhasil: '+data.suksesp+'<br>Pajak Pending: '+data.pendingp+'<br>Pajak Gagal: '+data.gagalp ,
                                     //         'success'
                                     //       )
-
-                                          kembali2();
-                                        document.getElementById('noadvicesotp').value='';
+                                    document.getElementById('noadvicesotp').value='';
                                         document.getElementById('noadvicesotp1').value='';
                                         document.getElementById('otp').value='';
                                         table.ajax.reload()
                                         table3.ajax.reload() 
+                                          kembali2();
+                                        
 
                                 } else if(status == false || status == 'false'){ 
                                      Swal.fire({
