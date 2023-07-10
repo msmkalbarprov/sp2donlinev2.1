@@ -365,7 +365,7 @@ function get_token(){
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/sppd/hh/auth",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/hh/auth",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -402,7 +402,7 @@ function get_token(){
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/api/sppd/hh/encrypt/key",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/api/sppd/hh/encrypt/key",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -722,7 +722,7 @@ function get_sp2d($no='',$nouji='')
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/sppd/sppd/save",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/save",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -786,7 +786,7 @@ function get_sp2d($no='',$nouji='')
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/sppd/penerima/validasi",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/penerima/validasi",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -827,7 +827,7 @@ function kirimotp(){
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/sppd/sppd/execute",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/execute",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -1095,7 +1095,7 @@ function kirimotp(){
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://222.124.219.178:10090/sppd/sppd/sppd/execute",
+		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/execute",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -1287,6 +1287,41 @@ function kirimotp(){
     	}
     		
     	
+    }
+
+	function noreff_update(){
+        $request 	        = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '',file_get_contents("php://input")), true);
+    	$reference_no 		= $request['reference_no'];
+        $headers 	        = getallheaders();
+        if (isset($headers['Authorization']) && $headers['Authorization'] == 'Bearer ac7f1ee943063f61517658bfc4e4672fbcd32b5a') {
+            $data = array(
+                'noRef' => $reference_no
+            );
+            $data = $this->security->xss_clean($data);
+            $result = $this->admin_model->update_noreff($data);
+                if($result){
+                    $response = array(
+                        'response_code' => '00',
+                        'status' 		=> true,
+                        'message' 		=> 'SUKSES'
+                    );
+                }else{
+                    $response = array(
+                        'status' 		=> false,
+                        'message' 		=> 'GAGAL'
+                    );
+                }
+            
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        }else{
+            header('Content-Type: application/json');
+                echo json_encode(array(
+                    'message' => 'Invalid authorization token.',
+                    'status' => false
+                ));
+                return;
+        }
     }
 
 

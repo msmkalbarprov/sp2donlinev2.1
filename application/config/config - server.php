@@ -484,7 +484,7 @@ $config['csrf_token_name'] = 'csrf_token';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = FALSE;
-$config['csrf_exclude_uris'] = array('admin/TukdBank/status_payment_pajak','admin/TukdBank/getPostObject','admin/TukdBank/kirimotp2');
+$config['csrf_exclude_uris'] = array('admin/TukdBank/status_payment_pajak','admin/TukdBank/getPostObject','admin/TukdBank/kirimotp2','api/[a-z0-9/_-]+');
 
 /*
 |--------------------------------------------------------------------------

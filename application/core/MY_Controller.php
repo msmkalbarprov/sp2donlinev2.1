@@ -11,7 +11,10 @@
 				current_url() != base_url('admin/TukdBank/update_status_pembayaran') && 
 				current_url() != base_url('admin/TukdBank/update_status_pembayaran2') && 
 				current_url() != base_url('admin/TukdBank/status_payment_pajak') && 
-				current_url() != base_url('api/config_get') && 
+				current_url() != base_url('api/config_get') &&
+				current_url() != base_url('api/noreff_get') && 
+				current_url() != base_url('api/noreff_update') && 
+				current_url() != base_url('admin/TukdBank/noreff_update') && 
 				current_url() != base_url('admin/TukdBank/getPostObject'))  {
 				$user_id = $this->session->userdata('user_id');
 				if ($user_id) {

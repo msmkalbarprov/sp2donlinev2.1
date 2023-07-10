@@ -17,6 +17,17 @@ class Admin_model extends CI_Model{
 		$query = $this->db->get('ci_setting');
 		return $query->result();
 	}
+
+	public function get_noreff(){
+		$query = $this->db->get('noref_MPN_test');
+		return $query->result();
+	}
+
+	public function update_noreff($data){
+		$this->db->update('noref_MPN_test', $data);
+		return true;
+	}
+
 	//--------------------------------------------------------------------
 	public function update_user($data){
 		$id = $this->session->userdata('user_id');
