@@ -19,12 +19,12 @@ class Admin_model extends CI_Model{
 	}
 
 	public function get_noreff(){
-		$query = $this->db->get('noref_MPN_test');
+		$query = $this->db->get('noref_MPN');
 		return $query->result();
 	}
 
 	public function update_noreff($data){
-		$this->db->update('noref_MPN_test', $data);
+		$this->db->update('noref_MPN', $data);
 		return true;
 	}
 

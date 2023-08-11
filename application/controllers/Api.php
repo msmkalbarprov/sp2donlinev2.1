@@ -43,7 +43,6 @@ function config_get(){
                         "client_secret"=> $client_secret,
                         "reference_no"=> $reference_no
                  );
-
         $data = array(
             // 'idBilling' 	=>$idBilling,
             'response_code' => '00',

@@ -6,6 +6,8 @@
 			var $column_order = array(null, 'no_uji','tgl_uji','status_bank'); //field yang ada di table user
 			var $column_search = array('no_uji','tgl_uji','status_bank'); //field yang diizin untuk pencarian 
 			var $order = array('tgl_uji' => 'desc','nomor' => 'asc'); // default order
+			var $panjangpenguji = 11;
+			
 		// variable datatable daftar penguji
 
 		public function __construct()
@@ -18,7 +20,7 @@
 			private function _get_datatables_query()
 			{
 				$status_bank = array('4');
-				$this->db->select("*,cast(left(no_uji , len(no_uji)-8) as int)as nomor, 
+				$this->db->select("*,cast(left(no_uji , len(no_uji)-$this->panjangpenguji) as int)as nomor, 
 				(select sum(nilai) from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as nilai_uji");
 				$this->db->from($this->table);
 				$this->db->where_not_in("status_bank", $status_bank);
@@ -80,7 +82,7 @@
 		// datatable daftar penguji sukses
 		private function _get_datatables_query_sukses()
 		{
-			$this->db->select("*,cast(left(no_uji , len(no_uji)-8) as int)as nomor,(select sum(nilai) from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as nilai_uji");
+			$this->db->select("*,cast(left(no_uji , len(no_uji)-$this->panjangpenguji) as int)as nomor,(select sum(nilai) from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as nilai_uji");
 			$this->db->from($this->table);
 			$this->db->where("status_bank", 4);
 			$this->db->where("sp2d_online", 1);
@@ -136,13 +138,59 @@
 				$this->db->where("sp2d_online", 1);
 				return $this->db->count_all_results();
 			}
+
+		public function get_nouji($no_sp2d){
+			$hasil3	= $this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
+			$nouji	= $hasil3->row()->no_uji;
+			return $nouji;
+		}
+
+		// sukses
+		public function updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d){
+			$this->db->set('no_kas_bud', $nokasbud);
+			$this->db->set('no_advice', $nouji);
+			$this->db->set('status_bud', $statusbud);
+			$this->db->set('tgl_kas_bud', $date);
+			$this->db->where('no_sp2d', $no_sp2d);
+			$this->db->update('trhsp2d');
+			return true;
+		}
+
+		public function detailuji($status,$message,$no_sp2d){
+			$this->db->set('status', $status); //3 gagal 4 pending 
+			$this->db->set('ket_payment', $message);
+			$this->db->where('no_sp2d', $no_sp2d);
+			$this->db->update('trduji');
+			return true;
+		}
+
+		public function headeruji($status_bank,$nouji){
+			$this->db->set('status_bank', $status_bank);  //4 sukses 
+			$this->db->where('no_uji', $nouji);
+			$this->db->update('trhuji');
+			return true;
+		}
+
+		// end sukses
+
+		// potongan
+		public function updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling){
+			$this->db->set('status_setor', 1);
+			$this->db->set('tgl_setor', $date);
+			$this->db->set('ntpn', $ntpn);
+			$this->db->set('keterangan', $statusPaymentMpn);
+			$this->db->where('idBilling', $idbilling);
+			$this->db->update('trspmpot');
+			return true;
+		}
+		
 	// datatable daftar penguji sukses
 
 
 
 		public function get_all_advices(){
 			$status = array('0', '3');
-			$this->db->select('*, cast(left(no_uji , len(no_uji)-8) as int) as nomor');
+			$this->db->select('*, cast(left(no_uji , len(no_uji)-11) as int) as nomor');
 			$this->db->where_not_in('status_bank' , $status);
 			$this->db->where('sp2d_online' , 1);
 			$this->db->order_by('status_bank','asc');

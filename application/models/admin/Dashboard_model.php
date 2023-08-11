@@ -108,7 +108,7 @@
 		{
 			
 			$this->db->from("v_sp2donline");
-			$this->db->order_by("CAST(SUBSTRING(no_sp2d,0,LEN(no_sp2d)-7) as int) DESC");
+			$this->db->order_by("CAST(SUBSTRING(no_sp2d,0,LEN(no_sp2d)-8) as int) DESC");
 			$this->db->order_by("urut ASC");
 			$i = 0;
 			foreach ($this->column_search as $item) // loop kolom 

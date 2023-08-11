@@ -678,6 +678,8 @@ function activaTab(tab){
     }
 
     function kirimotp() {
+    var tablepenguji        = $('#datatablepenguji').DataTable(); 
+    var tablepengujisukses  = $('#datatablepengujisukses').DataTable(); 
     var nouji = document.getElementById('noadvicesotp').value;
     var kode_otp = document.getElementById('otp').value;
 
@@ -743,16 +745,11 @@ function activaTab(tab){
                                                 title: 'OTP BERHASIL',
                                                 html: swal_html
                                             });
-                                    //   Swal.fire(
-                                    //         'Verifikasi OTP Berhasil!',
-                                    //         'SP2D Berhasil: '+data.sukses+'<br>SP2D Pending: '+data.pending+'<br>SP2D Gagal: '+data.gagal+'<br>Pajak Berhasil: '+data.suksesp+'<br>Pajak Pending: '+data.pendingp+'<br>Pajak Gagal: '+data.gagalp ,
-                                    //         'success'
-                                    //       )
-                                    document.getElementById('noadvicesotp').value='';
+                                        document.getElementById('noadvicesotp').value='';
                                         document.getElementById('noadvicesotp1').value='';
                                         document.getElementById('otp').value='';
-                                        table.ajax.reload()
-                                        table3.ajax.reload() 
+                                        tablepenguji.ajax.reload()
+                                        tablepengujisukses.ajax.reload() 
                                           kembali2();
                                         
 

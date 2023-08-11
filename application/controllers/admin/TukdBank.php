@@ -349,7 +349,7 @@ public function validasisp2d()
 	}
 
 function get_detail_sp2d(){
-	ini_set('sqlsrv.ClientBufferMaxKBSize','524288'); // Setting to 512M
+			ini_set('sqlsrv.ClientBufferMaxKBSize','524288'); // Setting to 512M
     		ini_set('pdo_sqlsrv.client_buffer_max_kb_size','524288');
 		$id = $this->input->post('id',TRUE);
 		$data = $this->advices_model->get_detail_sp2d($id)->result();
@@ -365,7 +365,7 @@ function get_token(){
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/hh/auth",
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/hh/auth",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -373,7 +373,7 @@ function get_token(){
 		  CURLOPT_FOLLOWLOCATION => true,
 		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 		  CURLOPT_CUSTOMREQUEST => "POST",
-		  CURLOPT_POSTFIELDS =>"{\n    \"key\" : \"AENao6JDrf9+xCSwJks18IghphTdQuvcOBcVc7abvCo0WeZSDxm/9IPy+2EaqnVG\"\n}",
+		  CURLOPT_POSTFIELDS =>"{\n    \"key\" : \"B3BAEF1B1F00C116A979E8DD75D51E9A\"\n}",
 		  CURLOPT_HTTPHEADER => array(
 			"Content-Type: application/json"
 		  ),
@@ -402,7 +402,7 @@ function get_token(){
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/api/sppd/hh/encrypt/key",
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/api/sppd/hh/encrypt/key",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -426,6 +426,8 @@ function get_token(){
 	}
 	function proses_kebank(){
         // try {
+		ini_set('max_execution_time', -1);
+		ini_set('memory_limit', -1);
       	$nouji    = $this->input->post('no_uji'); 
 		
 		$sqltot = "SELECT count(*) as tot from TRDUJI where no_uji=? and status='1'" ;
@@ -467,13 +469,28 @@ function get_token(){
 		$msg=json_encode($data);
 		$token=$this->get_token_api();
 		$datakirim = $msg;
+
+		if($token==''){
+			$data = array(
+				'status' 		=> false,
+				'message' 		=> 'Get Authorization Failed !!'
+			);
+			header('Content-Type: application/json');
+			echo json_encode($data);
+			return;
+		}
+
 		
 		$last_update =  date('Y-m-d H:i:s');
 		$query ="INSERT into log_sp2donline(datakirim,token,nomor,lastupdate) 
                     values(?, ?, ?, ?) ";
         $asg = $this->db->query($query, array($datakirim,$token,$nouji,$last_update)); 
 
-		$this->kirim_sppd($datakirim,$token,$nouji);
+		if($asg){
+			$this->kirim_sppd($datakirim,$token,$nouji);
+		}
+
+		
 
 		
 		// } catch (\Exception $e) {
@@ -537,7 +554,7 @@ function get_sp2d($no='',$nouji='')
             $data['dari'] 		="Kuasa Bendahara Umum Daerah (Kuasa BUD)";
             $data['ta'] 		="2023";
             $data['bank'] 		="PT. Bank Kalbar Cabang Utama Pontianak";
-            $data['akunAsal'] 	="1001002201";
+            $data['akunAsal'] 	="1150100123";
             $data['jumlahBayar']=$vv['nilai'];
             $data['terbilang'] 	=$this->advices_model->terbilang($vv['nilai']);
             $dt_totpph 		= $this->db->query($sql_pajak_pph, array($vv['no_spm']))->result_array();
@@ -719,10 +736,11 @@ function get_sp2d($no='',$nouji='')
 	}
 	
 	function kirim_sppd($data,$token,$nouji){
+		ini_set('max_execution_time', -1);
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/save",
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/save",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -740,29 +758,34 @@ function get_sp2d($no='',$nouji='')
 		$response = curl_exec($curl);
 		// echo $response;
 		// return;
+		$httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
-		$output = json_decode($response);
+		// $output = json_decode($response);
+		// var_dump($response);
+		if($httpcode == 200){
+			echo $response; 
+		}else{
+
+			$msg = array(
+				"status"=> false,
+				"message"=> $httpcode,
+				"maxPage"=> null,
+				"perPage"=> null,
+				"columns"=> null,
+				"data"=> null	
+				);
+			echo json_encode($msg);
+			
+		}
 		
-		// $status  = $output->status;
-			// if($status==true){
+		// exit();
+		// $array = json_encode($response);
+		// echo $array ; 
+		// exit();
+		// $b = explode('":',$array);
+		// $c = explode(',\"',$b[1]);
+		// return $c;
 
-			// 	// $query ="UPDATE trhuji SET status_bank='2' where no_uji='$nouji'";
-            //         // $asg = $this->db->query($query);
-
-                
-			// }
-		
-
-		echo $response; 
-
-		exit();
-		
-		$array = json_encode($response);
-		echo $array ; 
-		exit();
-		$b = explode('":',$array);
-		$c = explode(',\"',$b[1]);
-		return $c;
 	
 
 	}
@@ -786,7 +809,7 @@ function get_sp2d($no='',$nouji='')
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/penerima/validasi",
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/penerima/validasi",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -810,10 +833,19 @@ function get_sp2d($no='',$nouji='')
 		// return $c;
 	}
 function kirimotp(){
+		ini_set('max_execution_time', -1);
+		ini_set('memory_limit', -1);
 		$data['no'] 	= $this->input->post('advice');
 		$data['otp'] 	= $this->input->post('otp');
 		if (is_numeric($this->input->post('otp'))==false || is_numeric($this->input->post('otp'))!=1 ){
-			$msg = array('status'=>'gagal','sukses'=>$sukses,'pending'=>$pending,'gagal'=>$gagal,'suksesp'=>$suksesp,'pendingp'=>$pendingp,'gagalp'=>$gagalp);
+			$msg = array(	'status'=>'gagal',
+							'sukses'=>$sukses,
+							'pending'=>$pending,
+							'gagal'=>$gagal,
+							'suksesp'=>$suksesp,
+							'pendingp'=>$pendingp,
+							'gagalp'=>$gagalp
+						);
                         echo json_encode($msg);
                         return;
 		}
@@ -825,260 +857,171 @@ function kirimotp(){
             'Authorization: Bearer '.$api_key,
 			"Content-Type: application/json"
         );
-		$curl = curl_init();
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/execute",
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => "",
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 0,
-		  CURLOPT_FOLLOWLOCATION => true,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => "POST",
-		  CURLOPT_POSTFIELDS =>$datakirim,
-		  CURLOPT_HTTPHEADER => $headers,
-		));
+		// $curl = curl_init();
+		// curl_setopt_array($curl, array(
+		//   CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
+		//   CURLOPT_RETURNTRANSFER => true,
+		//   CURLOPT_ENCODING => "",
+		//   CURLOPT_MAXREDIRS => 10,
+		//   CURLOPT_TIMEOUT => 0,
+		//   CURLOPT_FOLLOWLOCATION => true,
+		//   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		//   CURLOPT_CUSTOMREQUEST => "POST",
+		//   CURLOPT_POSTFIELDS =>$datakirim,
+		//   CURLOPT_HTTPHEADER => $headers,
+		// ));
 
-// 		$data = array (
-//   'status' => true,
-//   'message' => NULL,
-//   'maxPage' => NULL,
-//   'perPage' => NULL,
-//   'columns' => NULL,
-//   'data' => 
-//   array (
-//     0 => 
-//     array (
-//       'sppd' => 
-//       array (
-//         0 => 
-//         array (
-//           'no' => '1993/LS/2022',
-//           'result' => NULL,
-//           'message' => 'Transaksi Pending Sudah Masuk Ke Rekening Penampungan',
-//           'responseCode' => '11',
-//           'mpn' => 
-//           array (
-//             'nomorSP2D' => '1993/LS/2022',
-//             'nomorSPM' => '108/SPM/LS/5.02.0.00.0.00.02.0000/2022',
-//             'tanggalTransaksi' => '2022-07-28',
-//             'referenceNo' => '100100000784',
-//             'kodeJenisTransaksi' => 'Transfer-RTGS',
-//             'kodeOTP' => NULL,
-//             'tx_id' => 'b1e977fd-521e-4c9e-bf63-fb98d67fa5a0',
-//             'nominalTransaksi' => '601292088',
-//             'detailPotonganMpn' => 
-//             array (
-//               0 => 
-//               array (
-//                 'idBilling' => '126606394854035',
-//                 'nominalPotongan' => '34900',
-//                 'statusPaymentMpn' => 'Transaksi Pending',
-//                 'referenceNo' => '100100000785',
-//                 'ntpn' => '',
-//               ),
-//             ),
-//           ),
-//         ),
-//         1 => 
-//         array (
-//           'no' => '350/GJ/2022',
-//           'result' => NULL,
-//           'message' => 'SUKSES',
-//           'responseCode' => '00',
-//           'mpn' => 
-//           array (
-//             'nomorSP2D' => '350/GJ/2022',
-//             'nomorSPM' => '1/SPM/GJ/5.02.0.00.0.00.02.0000/2022',
-//             'tanggalTransaksi' => '2022-07-28',
-//             'referenceNo' => '100100000781',
-//             'kodeJenisTransaksi' => 'Transfer-OnUs',
-//             'kodeOTP' => NULL,
-//             'tx_id' => '6e57eb5c-ba54-432d-97c6-0e529a998db9',
-//             'nominalTransaksi' => '416240884',
-//             'detailPotonganMpn' => 
-//             array (
-//               0 => 
-//               array (
-//                 'idBilling' => '126606394842146',
-//                 'nominalPotongan' => '45000',
-//                 'statusPaymentMpn' => 'SUKSES',
-//                 'referenceNo' => '100100000782',
-//                 'ntpn' => '493662ORK73O8N12',
-//               ),
-//             ),
-//           ),
-//         ),
-//         2 => 
-//         array (
-//           'no' => '1995/LS/2022',
-//           'result' => NULL,
-//           'message' => 'Transaksi Pending Sudah Masuk Ke Rekening Penampungan',
-//           'responseCode' => '11',
-//           'mpn' => 
-//           array (
-//             'nomorSP2D' => '1995/LS/2022',
-//             'nomorSPM' => '110/SPM/LS/5.02.0.00.0.00.02.0000/2022',
-//             'tanggalTransaksi' => '2022-07-28',
-//             'referenceNo' => '100100000787',
-//             'kodeJenisTransaksi' => 'Transfer-SKN',
-//             'kodeOTP' => NULL,
-//             'tx_id' => '465536f9-a391-4feb-8556-3d2442eca84f',
-//             'nominalTransaksi' => '342018185',
-//             'detailPotonganMpn' => 
-//             array (
-//               0 => 
-//               array (
-//                 'idBilling' => '126606394846082',
-//                 'nominalPotongan' => '78000',
-//                 'statusPaymentMpn' => 'Transaksi Pending',
-//                 'referenceNo' => '100100000788',
-//                 'ntpn' => '',
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//       'ntp' => 
-//       array (
-//       ),
-//     ),
-//   ),
-// );
+		 $response = '{"status":true,"message":null,"maxPage":null,"perPage":null,"columns":null,"data":[{"sppd":[{"no":"5747/LS/2023","result":null,"message":"SUKSES","responseCode":"00","mpn":{"nomorSP2D":"5747/LS/2023","nomorSPM":"502/SPM/LS/5.02.0.00.0.00.01.0000/2023","tanggalTransaksi":"2023-08-10","referenceNo":"101300000144","kodeJenisTransaksi":"Transfer-OnUs","kodeOTP":null,"tx_id":"b132d2be-6c5a-4e7b-9825-2c2fb05ccee1","nominalTransaksi":"109800","detailPotonganMpn":[]}}],"ntp":[]}]}';
 		header('Content-Type: application/json');
-
-		$response = curl_exec($curl);
-		// $response = json_encode($data);
-		// return;
-		// echo $response;
-		// return;
-		curl_close($curl);
-		$date=  date('Y-m-d');
-		$output = json_decode($response);
+		// $response = curl_exec($curl);
+		// $httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		// curl_close($curl);
+		$httpcode = 200;
 		
-		// return;
-		$gagal=0;
-		$sukses=0;
-		$gagalp=0;
-		$pendingp=0;
-		$pending=0;
-		$suksesp=0;
-		if ($output->status===true){
-			foreach ($output->data[0]->sppd as $hasil){
-			$no_sp2d = $hasil->no;
-			$result  = $hasil->responseCode;
-			$message = $hasil->message;
-
-			// echo "response".$no_sp2d;
-			if($result===00 || $result==='00'){
-
-				$hasil3=$this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
-				$nouji=$hasil3->row()->no_uji;
-						
-				$this->db->set('no_kas_bud', $this->sp2d_model->get_no_kas_bud());
-				$this->db->set('no_advice', $nouji);
-				$this->db->set('status_bud', $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 1 : 2); //2 pending 1 Cair BUD
-				$this->db->set('tgl_kas_bud', $date);
-				$this->db->where('no_sp2d', $no_sp2d);
-				$this->db->update('trhsp2d');
-
-				$this->db->set('status', $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 2 : 4); //3 gagal 4 pending 
-				$this->db->set('ket_payment', $message);
-				$this->db->where('no_sp2d', $no_sp2d);
-				$this->db->update('trduji');
-				
-				
-				
-				$this->db->set('status_bank', $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 4 : 2);  //4 sukses 
-				$this->db->where('no_uji', $nouji);
-				$this->db->update('trhuji');
-
-                     // 2022 query jurnal
-				$sukses=++$sukses;
-			}else if($result===11 || $result==='11'){
-				$hasil3=$this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
-				$nouji=$hasil3->row()->no_uji;
-
-				$this->db->set('status_bud', 1);  //1 cair bud 2 pending
-				$this->db->set('no_kas_bud', $this->sp2d_model->get_no_kas_bud());
-				$this->db->set('tgl_kas_bud', $date);
-				$this->db->where('no_sp2d', $no_sp2d);
-				$this->db->update('trhsp2d');
-
-                $this->db->set('status', 4); //4 pending
-                $this->db->set('ket_payment', $message);
-				$this->db->where('no_sp2d', $no_sp2d);
-				$this->db->update('trduji');
-
-				
-				$this->db->set('status_bank', 2);
-				$this->db->where('no_uji', $nouji);
-				$this->db->update('trhuji');
-
-                     // 2022 query jurnal
-				$pending=++$pending;
-			}else{
-				$hasil3=$this->db->query("SELECT no_uji as no_uji FROM  trduji where no_sp2d=?",$no_sp2d);
-				$nouji=$hasil3->row()->no_uji;
-				
-				$gagal=++$gagal;
-				$this->db->set('status', 3); //3 gagal 4 pending 
-				$this->db->set('ket_payment', $message);
-				$this->db->where('no_sp2d', $no_sp2d);
-				$this->db->update('trduji');
-
-				$this->db->set('status_bank', 5); //status proses bank
-				$this->db->where('no_uji', $nouji);
-				$this->db->update('trhuji');
-			}
-			// $output->data[0]->sppd[0]->mpn->detailPotonganMpn as $hasil2
-			foreach ($hasil->mpn->detailPotonganMpn as $hasil2){
-				$idbilling 				= $hasil2->idBilling;
-				$statusPaymentMpn  		= $hasil2->statusPaymentMpn;
-				$ntpn  					= $hasil2->ntpn;
-				// echo "response".$no_sp2d;
-				if($statusPaymentMpn==='SUKSES'){
+		$date 		=  date('Y-m-d');
+		$output 	= json_decode($response);
+		$gagal		= 0;
+		$sukses		= 0;
+		$gagalp		= 0;
+		$pendingp 	= 0;
+		$pending 	= 0;
+		$suksesp 	= 0;
+		if($httpcode != 200){
+			$msg = array(
+				'status'	=>false,
+				'sukses'	=>0,
+				'pending'	=>0,
+				'gagal'		=>0,
+				'suksesp'	=>0,
+				'pendingp'	=>0,
+				'gagalp'	=>0,
+				'httpcode'	=>$httpcode,
+				'result'	=>97,
+				'data'		=>null
+			);
+		}else{
+			// var_dump($output->data[0]);
+			if ($output->status===true || $output->status===1){
+				foreach ($output->data[0]->sppd as $hasil){
+					$no_sp2d = $hasil->no;
+					$result  = $hasil->responseCode;
+					$message = $hasil->message;
 					
-					$this->db->set('status_setor', 1);
-					$this->db->set('tgl_setor', $date);
-					$this->db->set('ntpn', $ntpn);
-					$this->db->set('keterangan', $statusPaymentMpn);
-					$this->db->where('idBilling', $idbilling);
-					$this->db->update('trspmpot');
+					if($result===00 || $result==='00'){
+
+						$nouji 		= $this->advices_model->get_nouji($no_sp2d);
+						$nokasbud 	= $this->sp2d_model->get_no_kas_bud();
+						
+						$statusbud	= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 1 : 2; //2 : pending, 1 : Cair BUD
+						$status 	= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 2 : 4; //3 : gagal    4 : pending
+						$status_bank= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 4 : 2; //4 : sukses 	 2 : pending
+						
+						// action1
+						$resultsp2d = $this->advices_model->updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d);
+						// action2
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						// action3
+						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
+						// count sukses
+						$sukses=++$sukses;
+						// potongan
+						if (count($hasil->mpn->detailPotonganMpn) > 0){
+							foreach ($hasil->mpn->detailPotonganMpn as $hasil2){
+								$idbilling 				= $hasil2->idBilling;
+								$statusPaymentMpn  		= $hasil2->statusPaymentMpn;
+								$ntpn  					= $hasil2->ntpn;
+								// echo "response".$no_sp2d;
+								if($statusPaymentMpn==='SUKSES'){
+									$status_setor 	= 1;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$suksesp=++$suksesp;
+								}else if($statusPaymentMpn==='Transaksi Pending'){
+									$status_setor 	= 2;
+									$ntpn			= null;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$pendingp=++$pendingp;
+								}else{
+									$status_setor 	= 0;
+									$ntpn			= null;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$gagalp=++$gagalp;
+								}
+							}
+						}
+
+					}else if($result===11 || $result==='11'){ //pending
+						$nouji 		= $this->advices_model->get_nouji($no_sp2d);
+						$nokasbud 	= $this->sp2d_model->get_no_kas_bud();
+						
+						$statusbud	= 1;
+						$status 	= 4;
+						$status_bank= 2;
+						
+						// action1
+						$resultsp2d = $this->advices_model->updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d);
+						// action2
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						// action3
+						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
+						// count pending
+						$pending=++$pending;
+						// potongan
+						if (count($hasil->mpn->detailPotonganMpn) > 0){
+							foreach ($hasil->mpn->detailPotonganMpn as $hasil2){
+								$idbilling 				= $hasil2->idBilling;
+								$statusPaymentMpn  		= $hasil2->statusPaymentMpn;
+								$ntpn  					= $hasil2->ntpn;
+								// echo "response".$no_sp2d;
+								if($statusPaymentMpn==='SUKSES'){
+									$status_setor 	= 1;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$suksesp=++$suksesp;
+								}else if($statusPaymentMpn==='Transaksi Pending'){
+									$status_setor 	= 2;
+									$ntpn			= null;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$pendingp=++$pendingp;
+								}else{
+									$status_setor 	= 0;
+									$ntpn			= null;
+									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
+									$gagalp=++$gagalp;
+								}
+							}
+						}
+
+					}elseif ($result==='97' || $result===97){
+						$gagal=++$gagal;
+					}else{
+						$nouji 		= $this->advices_model->get_nouji($no_sp2d);
+						$status 	= 3;
+						$status_bank= 5;
+						// action2
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						// action3
+						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
+						// count gagal
+						$gagal=++$gagal;
+					}
 	
-					$suksesp=++$suksesp;
-				}else if($statusPaymentMpn==='Transaksi Pending'){
-					$this->db->set('status_setor', 2);
-					$this->db->set('tgl_setor', $date);
-					$this->db->set('keterangan', $statusPaymentMpn);
-					$this->db->where('idBilling', $idbilling);
-					$this->db->update('trspmpot');
-	
-					$pendingp=++$pendingp;
-				}else{
-					$gagalp=++$gagalp;
-	
-					$this->db->set('status_setor', 0);
-					$this->db->set('tgl_setor', $date);
-					$this->db->set('keterangan', $statusPaymentMpn);
-					$this->db->where('idBilling', $idbilling);
-					$this->db->update('trspmpot');
+					
+					header('Content-Type: application/json');
+					$msg = array(
+						'status' 	=> $output->status,
+						'sukses'	=> $sukses,
+						'pending'	=> $pending,
+						'gagal'		=> $gagal,
+						'suksesp'	=> $suksesp,
+						'pendingp'	=> $pendingp,
+						'gagalp'	=> $gagalp,
+						'httpcode'	=> $message,
+						'result'	=> $result,
+						'data'		=> $output
+					);
 				}
 			}
-
-			$msg = array(
-				'status'=>$output->status,
-				'sukses'=>$sukses,
-				'pending'=>$pending,
-				'gagal'=>$gagal,
-				'suksesp'=>$suksesp,
-				'pendingp'=>$pendingp,
-				'gagalp'=>$gagalp,
-				'data'=>$result
-			);
 		}
-	}
-
+		
         echo json_encode($msg);
 
 	}
@@ -1095,7 +1038,7 @@ function kirimotp(){
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://192.168.9.2:10090/sppd/sppd/sppd/execute",
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
