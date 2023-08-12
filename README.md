@@ -20,3 +20,9 @@ SP2D Online
 6. Penambahan rekening dan nama pemilik rekening di rincian sp2d
 7. Penambahan nama bank di rincian sp2d
 8. Penambahan proteksi status penguji
+
+**V2.1**
+1. Penyesuaian response dengan payment gateway baru
+2. perubahan url api payment gateway
+3. penambahan response httpcode
+4. perubahan token jwt 
