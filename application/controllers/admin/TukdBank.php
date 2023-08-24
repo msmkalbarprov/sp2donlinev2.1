@@ -857,26 +857,26 @@ function kirimotp(){
             'Authorization: Bearer '.$api_key,
 			"Content-Type: application/json"
         );
-		// $curl = curl_init();
-		// curl_setopt_array($curl, array(
-		//   CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
-		//   CURLOPT_RETURNTRANSFER => true,
-		//   CURLOPT_ENCODING => "",
-		//   CURLOPT_MAXREDIRS => 10,
-		//   CURLOPT_TIMEOUT => 0,
-		//   CURLOPT_FOLLOWLOCATION => true,
-		//   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		//   CURLOPT_CUSTOMREQUEST => "POST",
-		//   CURLOPT_POSTFIELDS =>$datakirim,
-		//   CURLOPT_HTTPHEADER => $headers,
-		// ));
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 0,
+		  CURLOPT_FOLLOWLOCATION => true,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "POST",
+		  CURLOPT_POSTFIELDS =>$datakirim,
+		  CURLOPT_HTTPHEADER => $headers,
+		));
 
-		 $response = '{"status":true,"message":null,"maxPage":null,"perPage":null,"columns":null,"data":[{"sppd":[{"no":"5747/LS/2023","result":null,"message":"SUKSES","responseCode":"00","mpn":{"nomorSP2D":"5747/LS/2023","nomorSPM":"502/SPM/LS/5.02.0.00.0.00.01.0000/2023","tanggalTransaksi":"2023-08-10","referenceNo":"101300000144","kodeJenisTransaksi":"Transfer-OnUs","kodeOTP":null,"tx_id":"b132d2be-6c5a-4e7b-9825-2c2fb05ccee1","nominalTransaksi":"109800","detailPotonganMpn":[]}}],"ntp":[]}]}';
+		//  $response = '{"status":true,"message":null,"maxPage":null,"perPage":null,"columns":null,"data":[{"sppd":[{"no":"5747/LS/2023","result":null,"message":"SUKSES","responseCode":"00","mpn":{"nomorSP2D":"5747/LS/2023","nomorSPM":"502/SPM/LS/5.02.0.00.0.00.01.0000/2023","tanggalTransaksi":"2023-08-10","referenceNo":"101300000144","kodeJenisTransaksi":"Transfer-OnUs","kodeOTP":null,"tx_id":"b132d2be-6c5a-4e7b-9825-2c2fb05ccee1","nominalTransaksi":"109800","detailPotonganMpn":[]}}],"ntp":[]}]}';
 		header('Content-Type: application/json');
-		// $response = curl_exec($curl);
-		// $httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		// curl_close($curl);
-		$httpcode = 200;
+		$response = curl_exec($curl);
+		$httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
+		curl_close($curl);
+		// $httpcode = 200;
 		
 		$date 		=  date('Y-m-d');
 		$output 	= json_decode($response);
@@ -1137,6 +1137,15 @@ function kirimotp(){
 		
 
 	public function status_payment_pajak() {
+
+		// header('Content-Type: application/json');
+    	// 	echo json_encode(array(
+    	// 		'message' => 'Success authorization token.',
+    	// 		'status' => true
+    	// 	));
+    	// 	return;
+
+
 		
 		 $request 	= json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '',file_get_contents("php://input")), true);
 
@@ -1148,7 +1157,8 @@ function kirimotp(){
     	$responseCode 			= $request['responseCode'];
     	$detailPotonganMpn 		= $request['detailPotonganMpn'];
 		$headers 	= getallheaders();
-    	if (isset($headers['Authorization']) && $headers['Authorization'] == 'Bearer 309F8E7150EE5FDE159A1CF04C40B40F') {
+    	if (isset($headers['Authorization']) && $headers['Authorization'] == 'Bearer ac7f1ee943063f61517658bfc4e4672fbcd32b5a') {
+
 	    	$this->db->from('trduji');
 				$this->db->where('no_sp2d',$request['nomorSP2D']);
 				$hasilspm = $this->db->count_all_results();
