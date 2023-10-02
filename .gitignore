@@ -23,4 +23,4 @@ application/config/database.php
 .htaccess
 index.php
 application/session/*
-/assets/img/*
+# /assets/img/*
