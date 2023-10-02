@@ -1,5 +1,6 @@
 #PEMDA 
-1. Kab. Kubu Raya
+1. Provinsi Kalimantan Barat
+2. Kab. Kubu Raya
 
 # LOG SP2D ONLINE
 SP2D Online
@@ -29,3 +30,5 @@ SP2D Online
 2. perubahan url api payment gateway
 3. penambahan response httpcode
 4. perubahan token jwt 
+5. Penambahan jam otor
+5. Penambahan Informasi Transaksi SP2D
