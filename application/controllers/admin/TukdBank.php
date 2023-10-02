@@ -209,7 +209,14 @@ public function datatable_sp2d(){
 					data-sp2ket="'.$row['keperluan'].'" 
 					data-sp2stat="'.$this->security->xss_clean($row['ket_payment']).'
 				"> 
-				<i class="fa fa-list"></i></a></div>',
+				<i class="fa fa-list"></i></a>
+				<a title="Informasi SP2D" class="btn btn-sm btn-info infosp2d text-white" 
+					data-modsp2d="'.$this->security->xss_clean($row['no_sp2d']).'" 
+					data-modstat="'.$this->security->xss_clean($row['status']).'"
+				"> 
+				<i class="fa fa-info"></i></a>
+				
+				</div>',
 				
 
 			);
@@ -424,6 +431,7 @@ function get_token(){
 		return (object)$newData;
 
 	}
+
 	function proses_kebank(){
         // try {
 		ini_set('max_execution_time', -1);
@@ -1136,20 +1144,8 @@ function kirimotp(){
 	}
 		
 
-	public function status_payment_pajak() {
-
-		// header('Content-Type: application/json');
-    	// 	echo json_encode(array(
-    	// 		'message' => 'Success authorization token.',
-    	// 		'status' => true
-    	// 	));
-    	// 	return;
-
-
-		
+public function status_payment_pajak() {
 		 $request 	= json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '',file_get_contents("php://input")), true);
-
-		
     	// variable
     	$nomorSP2D 				= $request['nomorSP2D'];
 		$tanggaltransaksi		= $request['tanggalTransaksi'];
@@ -1172,7 +1168,7 @@ function kirimotp(){
 							);
 							header('Content-Type: application/json');
 	    					echo json_encode($data);
-				}else{
+			}else{
 
 					if ($request['responseCode'] == '00') {
 						$hasil=$this->db->query("SELECT no_uji FROM  trduji where no_sp2d = ?", $nomorSP2D);
@@ -1346,6 +1342,169 @@ function kirimotp(){
     		return;
     	}
     }
+
+	function infosp2d() {
+		ini_set('max_execution_time', -1);
+		$data['nomorSP2D'] 	= $this->input->post('no_sp2d');
+		$datakirim 			= json_encode($data);
+		$api_key 			= $this->get_token_api();
+		$curl 				= curl_init();
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/check",
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 0,
+			  CURLOPT_FOLLOWLOCATION => true,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "POST",
+			  CURLOPT_POSTFIELDS => $datakirim,
+			  CURLOPT_HTTPHEADER => array(
+				"Authorization: Bearer ".$api_key,
+				"Content-Type: application/json"
+			  ),
+			));
+	
+			$response = curl_exec($curl);
+			$httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			curl_close($curl);
+			if($httpcode == 200){
+				echo $response; 
+			}else{
+				$msg = array(
+					"status"=> false,
+					"message"=> $httpcode,
+					"maxPage"=> null,
+					"perPage"=> null,
+					"columns"=> null,
+					"data"=> null	
+					);
+				echo json_encode($msg);
+				
+			}
+		
+	}
+
+	function callbacksp2d() {
+		ini_set('max_execution_time', -1);
+		$data['nomorSP2D'] 	= $this->input->post('no_sp2d');
+		$datakirim 			= json_encode($data);
+		$api_key 			= $this->get_token_api();
+		$curl 				= curl_init();
+			curl_setopt_array($curl, array(
+			  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/check",
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_ENCODING => "",
+			  CURLOPT_MAXREDIRS => 10,
+			  CURLOPT_TIMEOUT => 0,
+			  CURLOPT_FOLLOWLOCATION => true,
+			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			  CURLOPT_CUSTOMREQUEST => "POST",
+			  CURLOPT_POSTFIELDS => $datakirim,
+			  CURLOPT_HTTPHEADER => array(
+				"Authorization: Bearer ".$api_key,
+				"Content-Type: application/json"
+			  ),
+			));
+	
+			$response = curl_exec($curl);
+			$httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
+			curl_close($curl);
+			if($httpcode == 200){
+				$datasp2d = json_decode($response);
+				// callback
+				if($datasp2d->data[0]->response_code === '00'){
+					
+					$nomorSP2D 				= $datasp2d->data[0]->data->nomorSP2D;
+					$nomorSPM 				= $datasp2d->data[0]->data->nomorSPM;
+					$tanggaltransaksi		= $datasp2d->data[0]->data->tanggalTransaksi;
+					$messageDetail			= $datasp2d->data[0]->data->messageDetail;
+					$responseCode 			= $datasp2d->data[0]->data->responseCode;
+					$detailPotonganMpn 		= $datasp2d->data[0]->data->detailPotonganMpn;
+					$detailPotonganNonMpn 	= $datasp2d->data[0]->data->detailPotonganNonMpn;
+
+						$this->db->from('trduji');
+						$this->db->where('no_sp2d',$nomorSP2D);
+						$hasilspm = $this->db->count_all_results();
+
+					if ($hasilspm=='' || $hasilspm==null || $hasilspm=='0' || $hasilspm==0){
+							$data = array(
+										'response_code' => '02',
+										'status' 		=> true,
+										'message' 		=> 'SP2D tidak tersedia',
+										'data' 			=>$hasilspm
+									);
+									header('Content-Type: application/json');
+									echo json_encode($data);
+					}else{
+						$hasil=$this->db->query("SELECT no_uji FROM  trduji where no_sp2d = ?", $nomorSP2D);
+						$no_uji=$hasil->row()->no_uji;
+						
+						$this->db->set('status', 2);
+						$this->db->set('ket_payment', $messageDetail);
+						$this->db->where('no_sp2d', $nomorSP2D);
+						$this->db->update('trduji');
+
+						$this->db->set('status_bank', 4);
+						$this->db->where('no_uji', $no_uji);
+						$query = $this->db->update('trhuji');
+						
+						foreach ($detailPotonganMpn  as $potonganMpn){
+							$idBilling = $potonganMpn->idBilling;
+					
+							$this->db->set('status_setor', 1);
+							$this->db->set('ntpn', $potonganMpn->ntpn);
+							$this->db->set('keterangan', $potonganMpn->messageDetail);
+							$this->db->where('idBilling', $idBilling);
+							$this->db->where('no_spm', $nomorSPM);
+							$this->db->update('trspmpot');
+						
+						}
+
+						foreach ($detailPotonganNonMpn  as $potonganNonMpn){
+							$kodeMap = $potonganNonMpn->kodeMap;
+
+							$this->db->set('status_setor', 1);
+							$this->db->set('keterangan', $potonganMpn->messageDetail);
+							$this->db->where('kd_rek6', $kodeMap);
+							$this->db->where('no_spm', $nomorSPM);
+							$this->db->update('trspmpot');
+						
+						}
+
+						$data = array(
+							// 'idBilling' 	=>$idBilling,
+							'response_code' => $datasp2d->data[0]->response_code,
+							'status' 		=> true,
+							'message' 		=> $datasp2d->data[0]->message
+						);
+						header('Content-Type: application/json');
+						echo json_encode($data);
+					}
+				}else{
+					$data = array(
+						'response_code' => $datasp2d->data[0]->response_code,
+						'status' 		=> true,
+						'message' 		=> $datasp2d->data[0]->message
+					);
+					header('Content-Type: application/json');
+					echo json_encode($data);
+				}
+				
+			}else{
+				$msg = array(
+					"status"=> false,
+					"message"=> $httpcode,
+					"maxPage"=> null,
+					"perPage"=> null,
+					"columns"=> null,
+					"data"=> null	
+					);
+				echo json_encode($msg);
+				
+			}
+		
+	}
 
  //    function status_payment_pajak() {
  //    	$request = json_decode(file_get_contents("php://input"), true);

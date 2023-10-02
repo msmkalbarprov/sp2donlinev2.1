@@ -315,11 +315,11 @@ function sp2d($lcnosp2d){
 				$rekben=$rowrek->rekening;                    
 				$npwp_ben= $rowrek->npwp;
 			}
-		$rek_ben = empty($rekben) || $rekben == 0 ? '' :$rekben;
-		$npwp_ben = empty($npwp_ben) || $npwp_ben == 0 ? '' :$npwp_ben;
-		$nama_bank = empty($bank) ? 'Belum Pilih Bank' :$this->supportskpd->get_nama($bank,'nama','ms_bank','kode');
-		$nama_bank_ben = empty($bank_ben) ? 'Belum Pilih Bank' :$this->supportskpd->get_nama($bank_ben,'nama','ms_bank','kode');
-		$sqlttd1="SELECT TOP 1 nama as nm,nip as nip,jabatan as jab,pangkat FROM ms_ttd where kode='BUD' and nip='19720908 199803 2 010'";
+		$rek_ben 		= empty($rekben) || $rekben == 0 ? '' :$rekben;
+		$npwp_ben 		= empty($npwp_ben) || $npwp_ben == 0 ? '' :$npwp_ben;
+		$nama_bank 		= empty($bank) ? 'Belum Pilih Bank' :$this->supportskpd->get_nama($bank,'nama','ms_bank','kode');
+		$nama_bank_ben 	= empty($bank_ben) ? 'Belum Pilih Bank' :$this->supportskpd->get_nama($bank_ben,'nama','ms_bank','kode');
+		$sqlttd1="SELECT TOP 1 nama as nm,nip as nip,jabatan as jab,pangkat FROM ci_setting ";
 			 $sqlttd=$this->db->query($sqlttd1);
 			 foreach ($sqlttd->result() as $rowttd)
 			{
@@ -372,25 +372,12 @@ function sp2d($lcnosp2d){
 	}       
 	
 	$cRet = '';
-			 $cRet .="<!--<table style=\"font-family: Open Sans; font-size:12px\" width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">
-				<tr>
-					<td rowspan=\"4\" align=\"right\">
-					<img src=\"".base_url()."/image/logo.bmp\"  width=\"75\" height=\"100\" />
-					</td>
-				<td align=\"center\" style=\"font-size:14px\"><strong>PEMERINTAH PROVINSI KALIMANTAN BARAT </strong></td></tr>
-				<tr><td align=\"center\" style=\"font-size:15px\"><strong>BADAN PENGELOLAAN KEUANGAN DAN PENDAPATAN DAERAH</strong></tr>
-				<tr><td align=\"center\" style=\"font-size:12px\">Jalan Ahmad Yani Telepon (0561) 736541 Fax. (0561) 738428</tr>
-				<tr><td align=\"center\">P O N T I A N A K</td></tr>
-				<tr><td colspan=\"2\" style=\"border-bottom: hidden;\" align=\"right\" >Kode Pos: 78124 &nbsp; &nbsp;</td></tr>
-				<tr></td><td colspan=\"2\" style=\"border-top: 2px solid black;border-bottom: 1px solid black;font-size:1px;\"  align=\"right\" >&nbsp;</td></tr>
-				</table>
-				&nbsp;<br><br>-->
-				";
+			 
 	$cRet .= "<br><br><br><br><br>
 	<table style=\"border-collapse:collapse;font-family: Open Sans;font-size:12px;\"  width=\"100%\" align=\"center\" border=\"1\" cellspacing=\"0\" cellpadding=\"0\">";
 	$cRet .="
 	<tr>
-		<td align=\"center\" width=\"50%\" style=\"border-collapse:collapse;font-weight:bold; font-size:12px\"> PROVINSI KALIMANTAN BARAT
+		<td align=\"center\" width=\"50%\" style=\"border-collapse:collapse;font-weight:bold; font-size:12px\"> KABUPATEN KUBU RAYA
 		</td>
 		<td align=\"center\" width=\"50%\">
 			<table style=\"border-collapse:collapse;font-size:12px; font-weight: bold;\" width=\"100%\" align=\"center\" cellspacing=\"4\" cellpadding=\"0\">
@@ -842,7 +829,6 @@ where a.no_spp='$lcnospp' AND a.kd_skpd='$lckd_skpd' and b.jns_spp not in ('1','
 					<td  width=\"15%\" align=\"center\"><b>Keterangan</b></td>
 				</tr>";
 				
-				// $sql = "select * from trspmpot where no_spm='$lcnospm' AND kd_rek6 IN('2111001','4140611','2110501','2110701','2110702','2110703','2110801','2110901','4140612','2111501')";
 				$sql = "select a.* from trspmpot a inner join ms_pot b on a.map_pot=b.map_pot where no_spm='$lcnospm' AND kelompok='1' AND kd_skpd='$lckd_skpd'";
 						$hasil = $this->db->query($sql);
 						$lcno = 0;
@@ -890,14 +876,6 @@ where a.no_spp='$lcnospp' AND a.kd_skpd='$lckd_skpd' and b.jns_spp not in ('1','
 				 
 				$sql = "SELECT a.* from trspmpot a inner join ms_pot b on a.map_pot=b.map_pot where no_spm='$lcnospm' AND kelompok='2' AND kd_skpd='$lckd_skpd'" ;
 
-				// select 1 urut, * from trspmpot where no_spm='$lcnospm' AND kd_rek6 IN('2130301') AND kd_skpd='$lckd_skpd'
-						 // UNION ALL
-						 // select 2 urut, * from trspmpot where no_spm='$lcnospm' AND kd_rek6 NOT IN('210107010001','210108010001') AND kd_skpd='$lckd_skpd'
-						 // ORDER BY urut";
-				// $sql = "select 1 urut, * from trspmpot where no_spm='$lcnospm' AND kd_rek6 IN('2130301')
-				//         UNION ALL
-				//         select 2 urut, * from trspmpot where no_spm='$lcnospm' AND kd_rek6 NOT IN('2111001','4140611','2130301','2110501','2110701','2110702','2110703','2110801','2110901','4140612','2111501')
-				//         ORDER BY urut,kd_rek6";
 						$hasil = $this->db->query($sql);
 						$lcno = 0;
 						$lntotalpott = 0;
@@ -1003,7 +981,7 @@ where a.no_spp='$lcnospp' AND a.kd_skpd='$lckd_skpd' and b.jns_spp not in ('1','
 					<td width=\"30%\" align=\"center\">
 					<br>
 					Pontianak, $tanggal<br>
-					Kuasa Bendahara Umum Daerah<br>
+					$jabatan<br>
 					<br>
 					<br>
 					<br>

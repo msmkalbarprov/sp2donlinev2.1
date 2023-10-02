@@ -113,7 +113,7 @@
                                                                                     <th class="text-center"><small>Penerima<br>Rekening<br>NPWP</small></th>
                                                                                     <th class="text-center">Nilai</th>
                                                                                     <th style="width: 30px;" class="text-center">Status</th>
-                                                                                    <th style="width: 30px;text-align: center;" >Action</th>
+                                                                                    <th style="width: 60px;text-align: center;" >Action</th>
                                                                                 </tr>
                                                                             </thead>
                                                                         </table>
@@ -298,9 +298,160 @@
                         
                         <!-- content -->
                     </div> <!-- container -->
+                
 
                 </div> <!-- content -->
-                
+              <!-- start modal verifikasi -->
+              <div id="largeModal" class="modal fade"  role="dialog" aria-labelledby="fullWidthModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-full-width">
+                            <div class="modal-content p-0">
+                                <div id="accordion">
+                                    <div class="card mb-0">
+                                        <div class="card-header" id="headingOne">
+                                            <h5 class="m-0">
+                                                <a href="#collapseOne" class="text-dark" data-bs-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">
+                                                    Transaksi SP2D BANK KALBAR
+                                                </a>
+                                            </h5>
+                                        </div>
+                            
+                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#accordion">
+                                            <div class="card-body text-left">
+                                            <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="card">
+                                                            <div class="card-body">
+                                                                <h2> DETAIL SP2D</h2>
+                                                                <div class="row">
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_nosp2d" class="form-label">Nomor SP2D<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_nosp2d" parsley-trigger="change" required placeholder="Nomor SP2D" class="form-control" id="mod_nosp2d" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_tgltrx" class="form-label">Tanggal Transaksi<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_tgltrx" parsley-trigger="change" required placeholder="Tanggal penguji" class="form-control" id="mod_tgltrx" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_nilaitrx" class="form-label">Nilai Transaksi<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_nilaitrx" parsley-trigger="change" required placeholder="nilai penguji" class="form-control" id="mod_nilaitrx" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_npwp" class="form-label">NPWP<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_npwp" parsley-trigger="change" required placeholder="nilai penguji" class="form-control" id="mod_npwp" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_nmskpd" class="form-label">SKPD<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_nmskpd" parsley-trigger="change" required placeholder="nama SKPD" class="form-control" id="mod_nmskpd" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_penerima" class="form-label">Penerima<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_penerima" parsley-trigger="change" required placeholder="Keterangan" class="form-control" id="mod_penerima" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_rek" class="form-label">Rekening<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_rek" parsley-trigger="change" required placeholder="nilai penguji" class="form-control" id="mod_rek" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_bank" class="form-label">Bank<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_bank" parsley-trigger="change" required placeholder="Keterangan" class="form-control" id="mod_bank" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-4">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_bayar" class="form-label">Jumlah Dibayar<span class="text-danger">*</span></label>
+                                                                            <input type="text" name="mod_bayar" parsley-trigger="change" required placeholder="Keterangan" class="form-control" id="mod_bayar" readonly/>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                <div class="col-lg-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_keperluan" class="form-label">Keperluan<span class="text-danger">*</span></label>
+                                                                            <textarea name="mod_keperluan" parsley-trigger="change" required placeholder="Keterangan" class="form-control" id="mod_keperluan" readonly></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="mod_message" class="form-label">Status/Keterangan<span class="text-danger">*</span></label>
+                                                                            <textarea name="mod_message" parsley-trigger="change" required placeholder="Keterangan" class="form-control" id="mod_message" readonly></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <h2> DETAIL POTONGAN MPN</h2>
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <table id="datatablempn" class="table table-bordered dt-responsive table-responsive" width="100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <!-- <th width="2%">No</th> -->
+                                                                                <!-- <th width="4%">Kode Akun</th> -->
+                                                                                <th width="30%">Nama Akun</th>
+                                                                                <th width="10%">Nilai Potongan</th>
+                                                                                <th width="7%">ID Billing</th>
+                                                                                <th width="7%">NTPN</th>
+                                                                                <th width="40%">Keterangan</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- end row -->
+                                                                <br>
+                                                                <h2> DETAIL POTONGAN NON MPN</h2>
+                                                                <div class="row">
+                                                                    <div class="col-lg-12">
+                                                                        <table id="datatablenonmpn" class="table table-bordered dt-responsive table-responsive" width="100%">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th width="30%">Nama Akun</th>
+                                                                                <th width="10%">Nilai Potongan</th>
+                                                                                <th width="10%">keterangan</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- end row -->
+                                                                
+                                                            </div> <!-- end card-body -->
+                                                        </div> <!-- end card -->
+                                                    </div> <!-- end col -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="text-end">
+                                            <button class="btn btn-primary waves-effect waves-light btncallback" name="btn_ok" id="btn_ok">Update</button>
+                                            <button type="reset" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                <!-- end modal verivikasi -->  
                 
                 <script src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/gh/ashl1/datatables-rowsgroup@fbd569b8768155c7a9a62568e66a64115887d7d0/dataTables.rowsGroup.js"></script>
@@ -310,6 +461,7 @@ $(document).ready(function(){
     let noadvices = null
     let nosp2d = null
     let nosp2ddet = null
+    document.getElementById('btn_ok').hidden=true;
 
 var table = $('#datatablepenguji').DataTable( {
     "processing": true,
@@ -446,7 +598,142 @@ var table = $('#datatablepenguji').DataTable( {
 
     });
 
+    var tablempn = $('#datatablempn').DataTable();
+
+    var tablenonmpn = $('#datatablenonmpn').DataTable();
+
+    // info sp2d
+    $('#SP2DDatatable').on('click', '.infosp2d', function() {
+        mod_sp2d       = $(this).data('modsp2d');
+        mod_stat       = $(this).data('modstat');
+        if(mod_stat==4){
+            document.getElementById('btn_ok').hidden=false;
+        }
+        tablempn.clear().draw();
+        tablenonmpn.clear().draw();
+        swal({  
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+                title: 'Ambil Data',
+                text: 'Silahkan tunggu...!!!',
+                onOpen: function () {
+                    swal.showLoading()
+                }
+            })
+        // ambil data
+        $(document).ready(function(){
+                    $.ajax({
+                    type: "POST",       
+                    dataType : 'json',         
+                    url      : "<?php echo base_url(); ?>admin/TukdBank/infosp2d/ ",
+                    data     : {
+                                no_sp2d:mod_sp2d,
+                                '<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>',
+                                },
+                        success:function(data){
+                            if (data.status == false){
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Oops...',
+                                    text: 'Gagal Ambil SP2D!!'
+                                });
+                            }else if (data.status == true){ 
+
+                                Swal.fire({
+                                    type: 'success',
+                                    title: 'SUCCESS',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                    })
+                                
+                                $('#largeModal').modal('show');
+
+                                document.getElementById("mod_nosp2d").value     = data.data[0].data.nomorSP2D;
+                                document.getElementById("mod_tgltrx").value     = data.data[0].data.tanggalTransaksi;
+                                document.getElementById("mod_nilaitrx").value   = number_format(data.data[0].data.jumlahNominalTransaksi,"2",",",".");
+                                document.getElementById("mod_penerima").value   = data.data[0].data.penerima.namaPenerima;
+                                document.getElementById("mod_rek").value        = data.data[0].data.penerima.noRekening;
+                                document.getElementById("mod_npwp").value       = data.data[0].data.penerima.npwp;
+                                document.getElementById("mod_keperluan").value  = data.data[0].data.notes;
+                                document.getElementById("mod_message").value    = data.data[0].data.messageDetail;
+                                document.getElementById("mod_nmskpd").value     = data.data[0].data.pengirim.namaOpd;
+                                document.getElementById("mod_bank").value       = data.data[0].data.penerima.namaBank;
+                                document.getElementById("mod_bayar").value      = number_format(data.data[0].data.jumlahDibayar,"2",",",".");
+                                
+
+                                let mpn = data.data[0].data.detailPotonganMpn;
+                                $.each(mpn, function (i,item) {
+                                    var rowNode= [item.keteranganPotongan, item.nominalPotongan, item.idBilling,item.ntpn,item.messageDetail]
+                                    tablempn.row.add(rowNode).draw();
+                                }); 
+
+                                let nonmpn = data.data[0].data.detailPotonganNonMpn;
+                                $.each(nonmpn, function (i,item) {
+                                    var rowNode= [item.keteranganKodeMap, item.nominalPotongan,item.messageDetail]
+                                    tablenonmpn.row.add(rowNode).draw();
+                                }); 
+
+                            } 
+
+                        }
+                    });
+                });
+
+        
+    });
+
 });
+
+$('#btn_ok').on('click', function() {
+    swal({  
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+                title: 'Call Back SP2D',
+                text: 'Silahkan tunggu...!!!',
+                onOpen: function () {
+                    swal.showLoading()
+                }
+            })
+    $.ajax({
+        type: "POST",       
+        dataType : 'json',         
+        url      : "<?php echo base_url(); ?>admin/TukdBank/callbacksp2d/ ",
+        data     : {
+                    no_sp2d:mod_sp2d,
+                    '<?php echo $this->security->get_csrf_token_name(); ?>' : '<?php echo $this->security->get_csrf_hash(); ?>',
+                    },
+            success:function(data){
+                if (data.status == false){
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal!!'
+                    });
+                }else if (data.status == true && data.response_code !=00){ 
+
+                    Swal.fire({
+                        type: 'warning',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                        })
+                        $('#SP2DDatatable').DataTable().ajax.reload();
+
+                }else if (data.status == true && data.response_code ==00){ 
+
+                Swal.fire({
+                    type: 'success',
+                    title: 'SUCCESS',
+                    showConfirmButton: false,
+                    timer: 1500
+                    })
+                    $('#SP2DDatatable').DataTable().ajax.reload();
+
+                }  
+
+            }
+    });
+})
 function activaTab(tab){
   $('.nav-tabs a[href="#' + tab + '"]').tab('show');
 };
@@ -750,6 +1037,7 @@ function activaTab(tab){
                                         document.getElementById('otp').value='';
                                         tablepenguji.ajax.reload()
                                         tablepengujisukses.ajax.reload() 
+                                        refreshtable()
                                           kembali2();
                                         
 

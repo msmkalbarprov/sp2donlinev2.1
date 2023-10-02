@@ -103,7 +103,7 @@ class Dashboard extends My_Controller {
 					$tanggaltransfer='';
 				  }else if ($datasp2d->status_bud ==1 && $datasp2d->statuskirim==2){
 					$status='<div class="text-center"><span class="badge bg-success " >Sudah ditransfer</span></div>';
-					$tanggaltransfer='';
+					$tanggaltransfer= $datasp2d->tgl_kas_bud;;
 				  }else if ($datasp2d->status_bud ==1 && $datasp2d->statuskirim==4){
 					$status='<div class="text-center text-dark"><span class="badge bg-warning " >Bank Penampung</span></div>';
 					$tanggaltransfer='';
