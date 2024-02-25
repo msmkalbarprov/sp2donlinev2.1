@@ -377,7 +377,7 @@ function sp2d($lcnosp2d){
 	<table style=\"border-collapse:collapse;font-family: Open Sans;font-size:12px;\"  width=\"100%\" align=\"center\" border=\"1\" cellspacing=\"0\" cellpadding=\"0\">";
 	$cRet .="
 	<tr>
-		<td align=\"center\" width=\"50%\" style=\"border-collapse:collapse;font-weight:bold; font-size:12px\"> KABUPATEN KUBU RAYA
+		<td align=\"center\" width=\"50%\" style=\"border-collapse:collapse;font-weight:bold; font-size:12px\"> PROVINSI KALIMANTAN BARAT
 		</td>
 		<td align=\"center\" width=\"50%\">
 			<table style=\"border-collapse:collapse;font-size:12px; font-weight: bold;\" width=\"100%\" align=\"center\" cellspacing=\"4\" cellpadding=\"0\">
@@ -1008,12 +1008,14 @@ public function verifikasi()
 		$verif 		= $this->input->post('verif', TRUE);
 		$id 		= $this->input->post('id', TRUE);
 		$username 	= $this->session->userdata('username');
-		
+		$curdate	=	date('Y-m-d');
 		$this->db->set('is_verified', $verif);
 		if($verif==1){
 			$this->db->set('user_verif', $username);
+			$this->db->set('tgl_verif', $curdate);
 		}else{
 			$this->db->set('user_batal_verif', $username);
+			$this->db->set('tgl_verif', null);
 		}
 		
 		$this->db->where('no_sp2d', $id);

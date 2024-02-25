@@ -78,7 +78,10 @@
 
         </div>
         <!-- END wrapper -->
-<script>
+        <script>
+    $(document).ready(function(){
+    startTime();
+    });
     function openmodalabout(){
         $('#about').modal('show');
     }
@@ -86,6 +89,35 @@
     function openmodalcontact(){
         $('#contact').modal('show');
     }
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+
+function startTime() {
+    var today = new Date();
+    var d = today.getDate();
+    var b = today.getMonth()+1;
+    var y = today.getFullYear();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    
+    const weekday = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    let day = weekday[today.getDay()];
+
+    // add a zero in front of numbers<10
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('time').innerHTML = "<i class='fa fa-calendar' aria-hidden='true'></i> "+day+', '+d + "-" + b + "-" + y +'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-clock-o" aria-hidden="true"></i> '+h + ":" + m + ":" + s;
+    t = setTimeout(function() {
+    startTime()
+    }, 500);
+}
+
 </script>
         <?php $this->load->view('includes/_right_sidebar'); ?>
         <!-- /Right-bar -->

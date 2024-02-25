@@ -6,7 +6,7 @@
 			var $column_order = array(null, 'no_uji','tgl_uji','status_bank'); //field yang ada di table user
 			var $column_search = array('no_uji','tgl_uji','status_bank'); //field yang diizin untuk pencarian 
 			var $order = array('tgl_uji' => 'desc','nomor' => 'asc'); // default order
-			var $panjangpenguji = 11;
+			var $panjangpenguji = 8;
 			
 		// variable datatable daftar penguji
 
@@ -82,7 +82,8 @@
 		// datatable daftar penguji sukses
 		private function _get_datatables_query_sukses()
 		{
-			$this->db->select("*,cast(left(no_uji , len(no_uji)-$this->panjangpenguji) as int)as nomor,(select sum(nilai) from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as nilai_uji");
+			$this->db->select("*,cast(left(no_uji , len(no_uji)-$this->panjangpenguji) as int)as nomor,(select sum(nilai) from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as nilai_uji,
+			(select TOP 1 tgl_kas_bud from trhsp2d inner join trduji on trhsp2d.no_sp2d=trduji.no_sp2d and trduji.no_uji=trhuji.no_uji)as tgl_cair");
 			$this->db->from($this->table);
 			$this->db->where("status_bank", 4);
 			$this->db->where("sp2d_online", 1);
@@ -149,6 +150,7 @@
 		public function updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d){
 			$this->db->set('no_kas_bud', $nokasbud);
 			$this->db->set('no_advice', $nouji);
+			$this->db->set('app_cair', 'SP2DONLINE');
 			$this->db->set('status_bud', $statusbud);
 			$this->db->set('tgl_kas_bud', $date);
 			$this->db->where('no_sp2d', $no_sp2d);
@@ -165,7 +167,9 @@
 		}
 
 		public function headeruji($status_bank,$nouji){
+			$curdate	=	date('Y-m-d H:i:s');
 			$this->db->set('status_bank', $status_bank);  //4 sukses 
+			$this->db->set('tgl_kirim', $curdate);  //date time OTP 
 			$this->db->where('no_uji', $nouji);
 			$this->db->update('trhuji');
 			return true;
@@ -190,7 +194,7 @@
 
 		public function get_all_advices(){
 			$status = array('0', '3');
-			$this->db->select('*, cast(left(no_uji , len(no_uji)-11) as int) as nomor');
+			$this->db->select("*, cast(left(no_uji , len(no_uji)-$this->panjangpenguji) as int) as nomor");
 			$this->db->where_not_in('status_bank' , $status);
 			$this->db->where('sp2d_online' , 1);
 			$this->db->order_by('status_bank','asc');

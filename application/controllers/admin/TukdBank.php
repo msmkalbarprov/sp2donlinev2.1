@@ -127,12 +127,12 @@ public function controller_method( )
 				$status='<div class="text-center"><span class="badge bg-warning" >Tidak Ada Keterangan</span></div>';
 				$status2="Tidak Ada Keterangan";
 			  }
-
+			  $newdate = ($dataPenguji->tgl_kirim == '' ? $dataPenguji->tgl_cair : date("Y-m-d H:i:s", strtotime($dataPenguji->tgl_kirim)));
             $row = array();
             //row pertama akan kita gunakan untuk btn edit dan delete
 			$row[] = $no;
             $row[] = '<div class="text-center"><span align="left"><font size="2px">'. $dataPenguji->no_uji .'</font></span></div></td>';
-            $row[] = '<div class="text-center"><span align="left"><font size="2px">'. $dataPenguji->tgl_uji .'</font></span></div></td>';
+            $row[] = '<div class="text-center"><span align="left"><font size="2px">'. $newdate .'</font></span></div></td>';
 			$row[] = $status;
 			$row[] = '<div class="text-center"><a title="Detail Penguji" class="btn btn-sm btn-success detail text-white" 
 						data-no_uji="'.htmlspecialchars($dataPenguji->no_uji).'" 
@@ -249,7 +249,7 @@ public function datatable_potongan(){
 		foreach ($records['data'] as $row) 
 		{  
 
-			if ($row['keterangan']=='SUKSES'){
+			if ($row['keterangan']=='SUKSES' || $row['keterangan']=='Sukses'){
 					$keterangan='<span class="badge bg-success">'.$this->security->xss_clean($row['keterangan']).'</span>';
 				}else if ($row['keterangan']=='Transaksi Pending'){
 					$keterangan='<span class="badge bg-warning">'.$this->security->xss_clean($row['keterangan']).'</span>';
@@ -372,7 +372,7 @@ function get_token(){
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/hh/auth",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/hh/auth",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -380,7 +380,7 @@ function get_token(){
 		  CURLOPT_FOLLOWLOCATION => true,
 		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 		  CURLOPT_CUSTOMREQUEST => "POST",
-		  CURLOPT_POSTFIELDS =>"{\n    \"key\" : \"B3BAEF1B1F00C116A979E8DD75D51E9A\"\n}",
+		  CURLOPT_POSTFIELDS =>"{\n    \"key\" : \"04A26249DD8D33B6E1F244030C7870D7\"\n}",
 		  CURLOPT_HTTPHEADER => array(
 			"Content-Type: application/json"
 		  ),
@@ -409,7 +409,7 @@ function get_token(){
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/api/sppd/hh/encrypt/key",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/api/sppd/hh/encrypt/key",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -476,6 +476,7 @@ function get_token(){
 
 		$msg=json_encode($data);
 		$token=$this->get_token_api();
+
 		$datakirim = $msg;
 
 		if($token==''){
@@ -493,7 +494,6 @@ function get_token(){
 		$query ="INSERT into log_sp2donline(datakirim,token,nomor,lastupdate) 
                     values(?, ?, ?, ?) ";
         $asg = $this->db->query($query, array($datakirim,$token,$nouji,$last_update)); 
-
 		if($asg){
 			$this->kirim_sppd($datakirim,$token,$nouji);
 		}
@@ -505,7 +505,7 @@ function get_token(){
 		// 	var_dump(['message' => $e->getMessage(), 'stacktrace' => $e->getTraceAsString()]);
 		// }
 	}
-function get_sp2d($no='',$nouji='')
+	function get_sp2d($no='',$nouji='')
 	{
 		$result = array();
         $row = array();
@@ -557,21 +557,27 @@ function get_sp2d($no='',$nouji='')
         						$data['opd']['code'] = $vvv['kd_skpd'];
                                 $data['opd']['name'] = $vvv['nm_skpd'];
                 }
-
+			// DATA RKUD
+			$result_rkud	= $this->db->query("SELECT TOP 1 * from ci_setting");
+			$rkud			= $result_rkud->row()->rek_rkud;
+			$nm_rkud		= $result_rkud->row()->nm_rek_rkud;
+			$bank_rkud		= $result_rkud->row()->nm_bank_rkud;
+			$tahun_anggaran	= $result_rkud->row()->tahun_anggaran;
              
-            $data['dari'] 		="Kuasa Bendahara Umum Daerah (Kuasa BUD)";
-            $data['ta'] 		="2023";
-            $data['bank'] 		="PT. Bank Kalbar Cabang Utama Pontianak";
-            $data['akunAsal'] 	="1150100123";
+			$data['dari'] 		= $nm_rkud;
+			$data['ta'] 		= $tahun_anggaran;
+			$data['bank'] 		= $bank_rkud;
+			$data['akunAsal'] 	= $rkud;
+			
             $data['jumlahBayar']=$vv['nilai'];
             $data['terbilang'] 	=$this->advices_model->terbilang($vv['nilai']);
             $dt_totpph 		= $this->db->query($sql_pajak_pph, array($vv['no_spm']))->result_array();
 				foreach($dt_totpph as $kkkpph => $pphtot){                                                               
-        						$data['jumlahPph'] 	=$pphtot['totpph'];
+        						$data['jumlahPotonganNonMpn'] 	=$pphtot['totpph'];
                 }
             $dt_totppn 		= $this->db->query($sql_pajak_ppn, array($vv['no_spm']))->result_array();
 				foreach($dt_totppn as $kkkppn=> $ppntot){                                                               
-        						$data['jumlahPpn'] 	=$ppntot['totppn'];
+        						$data['jumlahPotonganMpn'] 	=$ppntot['totppn'];
                 }
 
 				$dt_bank = $this->db->query($sql_bank, array($vv['bank']))->result_array();
@@ -587,56 +593,49 @@ function get_sp2d($no='',$nouji='')
             $data['jumlahPotongan'] 	= $vv['potongan'];	
             $data['jumlahDibayar'] 		= $vv['netto'];
             $data['jumlahTerbilang'] 	= $this->advices_model->terbilang($vv['netto']);
-            $sql_detail = "SELECT isnull(kd_sub_kegiatan,'-') as kd_sub_kegiatan,kd_rek6,nm_rek6,nilai from trdspp  where no_spp=?"; 
-            $dt_detail = $this->db->query($sql_detail, array($vv['no_spp']))->result_array();	
-            foreach($dt_detail as $kkkkk => $vvvvv){
-                $data['line'][$kkkkk]['rekening'] 	= $vvvvv['kd_sub_kegiatan'].'.'.$this->advices_model->dotrek($vvvvv['kd_rek6']);
-                $data['line'][$kkkkk]['uraian'] 	= $vvvvv['nm_rek6'];
-                $data['line'][$kkkkk]['jumlah'] 	= $vvvvv['nilai'];
-            }		
+            	
             $sql_jml_potongan ="SELECT COUNT(*) as jumlah from (SELECT kd_rek6,nm_rek6,nilai from trspmpot where no_spm=?) a";
             $hasil1 = $this->db->query($sql_jml_potongan, $vv['no_spm'])->row();
             $jumlahbarispot = $hasil1->jumlah; 
             if($jumlahbarispot>=1){
-                 $sql_potongan = "SELECT no_spm,kd_rek6,nm_rek6,nilai,idBilling as idBilling,noreff as refrensi,CASE when kd_rek6 in ('210105010001','210105020001','210105030001','210105030001','210109010001') THEN 'pph' else 'ppn' end as keterangan from trspmpot  where no_spm=? AND kd_rek6 IN('210105010001','210105020001','210105030001','210105030001','210109010001','210106010001')
-						UNION ALL
-						SELECT no_spm,kd_rek6,nm_rek6,nilai,idBilling as idBilling,noreff as refrensi,'lain' as keterangan from trspmpot  where no_spm=? AND kd_rek6 NOT IN('210105010001','210105020001','210105030001','210105030001','210109010001','210106010001')
-                 ";		
-                $dt_potongan = $this->db->query($sql_potongan, array($vv['no_spm'], $vv['no_spm']))->result_array();	
-                foreach($dt_potongan as $kkkkkk => $vvvvvv){
 
-						
-
-                    $data['potongan'][$kkkkkk]['rekening'] =  $vvvvvv['kd_rek6']; 
-                    $data['potongan'][$kkkkkk]['uraian'] = $vvvvvv['nm_rek6'];
-                    $data['potongan'][$kkkkkk]['jumlah'] = $vvvvvv['nilai'];
-
+				// MPN
+				$sql_potonganmpn = "SELECT no_spm,(select TOp 1 left(nm_skpd,50) from ms_skpd where kd_skpd=trspmpot.kd_skpd)  as keterangan,sum(nilai) as nilai,idBilling as idBilling from trspmpot  where no_spm= ? AND kd_rek6 IN('210105010001','210105020001','210105030001','210105030001','210109010001','210106010001') GROUP BY no_spm,kd_skpd,idBilling";		
+                $dt_potonganmpn = $this->db->query($sql_potonganmpn, $vv['no_spm'])->result_array();	
+                foreach($dt_potonganmpn as $kkkkkk => $vvvvvv){
                     $hasil2=$this->db->query("SELECT noRef+1 as noReff FROM  noref_MPN WITH (TABLOCKX) ");
-						foreach ($hasil2->result_array() as $row2){
-						$noReff2=$row2['noReff']; 
-						}
+					foreach ($hasil2->result_array() as $row2){
+					$noReff2=$row2['noReff']; 
+					}
                     
-                    // if ($vvvvvv['refrensi']===null){
-			          	$this->db->set('noreff', $noReff2);
-						$this->db->where('kd_rek6', $vvvvvv['kd_rek6']);
-						$this->db->where('no_spm', $vvvvvv['no_spm']);
-						$this->db->where('idBilling', $vvvvvv['idBilling']);
-						$this->db->update('trspmpot');
+					$this->db->set('noreff', $noReff2);
+					$this->db->where('no_spm', $vvvvvv['no_spm']);
+					$this->db->where('idBilling', $vvvvvv['idBilling']);
+					$this->db->update('trspmpot');
 
-						$this->db->set('noRef', $noReff2);
-						$this->db->update('noref_MPN');
+					$this->db->set('noRef', $noReff2);
+					$this->db->update('noref_MPN');
+					
+					$data['detailPotonganMpn'][$kkkkkk]['keteranganPotongan'] = $vvvvvv['keterangan'];
+                    $data['detailPotonganMpn'][$kkkkkk]['nominalPotongan'] = $vvvvvv['nilai'];
+					$data['detailPotonganMpn'][$kkkkkk]['referenceNo'] = $noReff2;
+                    $data['detailPotonganMpn'][$kkkkkk]['idBilling'] = $vvvvvv['idBilling'];
+					
+                }
 
-						$data['potongan'][$kkkkkk]['noReff'] = $noReff2;
-			        //   }else{
-			        //   	$data['potongan'][$kkkkkk]['noReff'] = $vvvvvv['refrensi'];
-			        //   }
 
-                    
-                    $data['potongan'][$kkkkkk]['idBilling'] = $vvvvvv['idBilling'];	 
-                    $data['potongan'][$kkkkkk]['keterangan'] = $vvvvvv['keterangan'];
+				// NON MPN
+				$sql_potongannonmpn = "SELECT no_spm,map_pot as kd_rek6, left(nm_rek6,50)  as keterangan,sum(nilai) as nilai from trspmpot  where no_spm= ? AND kd_rek6 NOT IN('210105010001','210105020001','210105030001','210105030001','210109010001','210106010001') GROUP BY no_spm,map_pot,nm_rek6
+                 ";		
+                $dt_potongannon = $this->db->query($sql_potongannonmpn, $vv['no_spm'])->result_array();	
+                foreach($dt_potongannon as $llllll => $vvvvvvv){
+					$data['detailPotonganNonMpn'][$llllll]['kodeMap'] =  $vvvvvvv['kd_rek6']; 
+					$data['detailPotonganNonMpn'][$llllll]['keteranganKodeMap'] = $vvvvvvv['keterangan'];
+					$data['detailPotonganNonMpn'][$llllll]['nominalPotongan'] = $vvvvvvv['nilai'];
                     	 
                     
                 }
+                 
                 
             }
            
@@ -748,7 +747,7 @@ function get_sp2d($no='',$nouji='')
 		$curl = curl_init();
 		
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/save",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/sppd/save",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -817,7 +816,7 @@ function get_sp2d($no='',$nouji='')
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/penerima/validasi",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/penerima/validasi",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -867,7 +866,7 @@ function kirimotp(){
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/sppd/execute",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -939,7 +938,7 @@ function kirimotp(){
 								$statusPaymentMpn  		= $hasil2->statusPaymentMpn;
 								$ntpn  					= $hasil2->ntpn;
 								// echo "response".$no_sp2d;
-								if($statusPaymentMpn==='SUKSES'){
+								if($statusPaymentMpn==='SUKSES' || $statusPaymentMpn==='Sukses'){
 									$status_setor 	= 1;
 									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
 									$suksesp=++$suksesp;
@@ -980,7 +979,7 @@ function kirimotp(){
 								$statusPaymentMpn  		= $hasil2->statusPaymentMpn;
 								$ntpn  					= $hasil2->ntpn;
 								// echo "response".$no_sp2d;
-								if($statusPaymentMpn==='SUKSES'){
+								if($statusPaymentMpn==='SUKSES' || $statusPaymentMpn==='Sukses'){
 									$status_setor 	= 1;
 									$this->advices_model->updatepotongan($status_setor,$date,$ntpn,$statusPaymentMpn,$idbilling);
 									$suksesp=++$suksesp;
@@ -1046,7 +1045,7 @@ function kirimotp(){
         );
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/execute",
+		  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/sppd/execute",
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -1350,7 +1349,7 @@ public function status_payment_pajak() {
 		$api_key 			= $this->get_token_api();
 		$curl 				= curl_init();
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/check",
+			  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/sppd/check",
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => "",
 			  CURLOPT_MAXREDIRS => 10,
@@ -1392,7 +1391,7 @@ public function status_payment_pajak() {
 		$api_key 			= $this->get_token_api();
 		$curl 				= curl_init();
 			curl_setopt_array($curl, array(
-			  CURLOPT_URL => "http://182.23.99.68:9091/api/sppd/sppd/check",
+			  CURLOPT_URL => "http://192.168.9.2:10090/api/sppd/sppd/check",
 			  CURLOPT_RETURNTRANSFER => true,
 			  CURLOPT_ENCODING => "",
 			  CURLOPT_MAXREDIRS => 10,

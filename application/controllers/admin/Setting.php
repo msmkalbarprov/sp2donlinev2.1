@@ -22,20 +22,28 @@ class Setting extends MY_Controller {
 
 			if ($this->input->post('clientid')=='' || $this->input->post('client_secret')=='' || $this->input->post('noreference')==''){
 				$data = array(
-					'nip' => $this->input->post('nip'),
-					'nama' => $this->input->post('nama'),
-					'nohp' => $this->input->post('nohp'),
-					'email' => $this->input->post('email')
+					'nip' 			=> $this->input->post('nip'),
+					'nama' 			=> $this->input->post('nama'),
+					'nohp' 			=> $this->input->post('nohp'),
+					'email' 		=> $this->input->post('email'),
+					'rek_rkud' 		=> $this->input->post('rek_rkud'),
+					'nm_rek_rkud' 	=> $this->input->post('nm_rek_rkud'),
+					'nm_bank_rkud' 	=> $this->input->post('nm_bank_rkud'),
+					'tahun_anggaran'=> $this->input->post('tahun_anggaran'),
 				);
 			}else{
 				$data = array(
-					'nip' => $this->input->post('nip'),
-					'nama' => $this->input->post('nama'),
-					'nohp' => $this->input->post('nohp'),
-					'email' => $this->input->post('email'),
-					'client_id' => $this->encrypt->encode($this->input->post('clientid')),
+					'nip' 			=> $this->input->post('nip'),
+					'nama' 			=> $this->input->post('nama'),
+					'nohp' 			=> $this->input->post('nohp'),
+					'email' 		=> $this->input->post('email'),
+					'rek_rkud' 		=> $this->input->post('rek_rkud'),
+					'nm_rek_rkud' 	=> $this->input->post('nm_rek_rkud'),
+					'nm_bank_rkud' 	=> $this->input->post('nm_bank_rkud'),
+					'tahun_anggaran'=> $this->input->post('tahun_anggaran'),
+					'client_id' 	=> $this->encrypt->encode($this->input->post('clientid')),
 					'client_secret' => $this->encrypt->encode($this->input->post('client_secret')),
-					'reference_no' => $this->encrypt->encode($this->input->post('noreference'))
+					'reference_no' 	=> $this->encrypt->encode($this->input->post('noreference'))
 				);
 			}
 			

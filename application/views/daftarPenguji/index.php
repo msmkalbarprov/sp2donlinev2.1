@@ -458,7 +458,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    let noadvices = null
+    let noadvices = 0
     let nosp2d = null
     let nosp2ddet = null
     document.getElementById('btn_ok').hidden=true;
@@ -890,12 +890,27 @@ function activaTab(tab){
     function kirimsp2d(){
         var nouji       = document.getElementById('no_uji_kirim').value;
         var statusbank  = document.getElementById('status_bank').value;
+        document.getElementById("noadvicesotp").value = nouji;
+        document.getElementById("noadvicesotp1").value = nouji;
+
         if(statusbank=='SUKSES'){
             swal.close()
                 Swal.fire({
                     type: 'error',
                     title: 'Oops...',
                     text: 'Daftar Penguji sudah cair!!'
+                });
+            return
+        }
+
+        if(statusbank == 'PENDING'){
+            swal.close()
+                Swal.fire({
+                    icon: "error",
+                    title: 'Oops...',
+                    html: 'Daftar Penguji dalam status <b>PENDING</b>!!',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
                 });
             return
         }

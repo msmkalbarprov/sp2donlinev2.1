@@ -60,7 +60,8 @@
 			return $this->db->count_all_results('trspmpot');
 		}
 		public function get_pajak_gagal(){
-			$this->db->where('keterangan', 'Error - Invalid payload request');
+			$this->db->or_where('keterangan', 'Error - Invalid payload request');
+			$this->db->or_where('keterangan', 'General Negative Response');
 			return $this->db->count_all_results('trspmpot');
 		}
 

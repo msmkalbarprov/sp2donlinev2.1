@@ -57,7 +57,11 @@
                             </div>
                         </li>
             
-    
+                        <li>
+                            <p class="page-title-main">
+                                <b><span id="time"></span> WIB</b>
+                            </p>
+                        </li>
                         <li class="dropdown notification-list topbar-dropdown">
                             <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                                 <?php if($this->session->userdata('username') == 'superadmin' || $this->session->userdata('username')=='kasubid3' ){ ?>

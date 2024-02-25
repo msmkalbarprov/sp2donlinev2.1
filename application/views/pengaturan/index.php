@@ -34,8 +34,8 @@
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="mb-3">
-                                                                <label for="no_sp2d_pot" class="form-label">No. HP <small>(untuk verifikasi token)</small><span class="text-danger">*</span></label>
-                                                                <input type="number" name="nohp" value="<?= $admin['nohp']; ?>" class="form-control" id="nohp" placeholder="">
+                                                            <label for="tgl_sp2d_pot" class="form-label">Jabatan<span class="text-danger">*</span></label>
+                                                                <input type="text" name="jabatan" value="<?= $admin['jabatan']; ?>" class="form-control" id="jabatan" placeholder="">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
@@ -48,13 +48,13 @@
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="mb-3">
-                                                                <label for="no_sp2d_pot" class="form-label">Email<span class="text-danger">*</span></label>
-                                                                <input type="email" name="email" value="<?= $admin['email']; ?>" class="form-control" id="email" placeholder="">
+                                                            <label for="no_sp2d_pot" class="form-label">No. HP <small>(untuk verifikasi token)</small><span class="text-danger">*</span></label>
+                                                                <input type="number" name="nohp" value="<?= $admin['nohp']; ?>" class="form-control" id="nohp" placeholder="">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <div class="mb-3">
-                                                                <label for="tgl_sp2d_pot" class="form-label">CLIENT SECRET<span class="text-danger">*</span></label>
+                                                                <label for="tgl_sp2d_pot" class="form-label">CLIENT SECRET KEY<span class="text-danger">*</span></label>
                                                                 <input type="password" name="client_secret"  class="form-control" id="client_secret" placeholder="">
                                                             </div>
                                                         </div>
@@ -62,13 +62,47 @@
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="mb-3">
-                                                                <label for="no_sp2d_pot" class="form-label">Reference No<span class="text-danger">*</span></label>
+                                                            <label for="no_sp2d_pot" class="form-label">Email<span class="text-danger">*</span></label>
+                                                                <input type="email" name="email" value="<?= $admin['email']; ?>" class="form-control" id="email" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <div class="mb-3">
+                                                            <label for="no_sp2d_pot" class="form-label">Reference No<span class="text-danger">*</span></label>
                                                                 <input type="password" name="noreference"  class="form-control" id="noreference" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <div class="mb-3">
+                                                            <label for="no_sp2d_pot" class="form-label">Tahun Anggaran<span class="text-danger">*</span></label>
+                                                                <input type="number" name="tahun_anggaran"  class="form-control" id="tahun_anggaran" value="<?= $admin['tahun_anggaran']; ?>" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="mb-3">
+                                                                <label for="no_sp2d_pot" class="form-label">RKUD<span class="text-danger">*</span></label>
+                                                                <input type="rek_rkud" name="rek_rkud" value="<?= $admin['rek_rkud']; ?>" class="form-control" id="email" placeholder="">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <div class="mb-3">
-                                                                <label for="tgl_sp2d_pot" class="form-label">PIN VERIFIKASI<span class="text-danger">*</span></label>
+                                                                <label for="tgl_sp2d_pot" class="form-label">BANK RKUD<span class="text-danger">*</span></label>
+                                                                <input type="text" name="nm_bank_rkud"  class="form-control" id="nm_bank_rkud" value="<?= $admin['nm_bank_rkud']; ?>" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="mb-3">
+                                                            <label for="tgl_sp2d_pot" class="form-label">Nama RKUD<span class="text-danger">*</span></label>
+                                                                <input type="text" name="nm_rek_rkud"  class="form-control" id="nm_rek_rkud" value="<?= $admin['nm_rek_rkud']; ?>" placeholder="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="mb-3">
+                                                                <label for="tgl_sp2d_pot" class="form-label">PIN<span class="text-danger">*</span></label>
                                                                 <input type="number" name="pin" value="" class="form-control" id="pin" placeholder="">
                                                             </div>
                                                         </div>
