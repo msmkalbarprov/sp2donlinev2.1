@@ -159,8 +159,10 @@
 		}
 
 		public function detailuji($status,$message,$no_sp2d){
+			$curdate	=	date('Y-m-d H:i:s');
 			$this->db->set('status', $status); //3 gagal 4 pending 
 			$this->db->set('ket_payment', $message);
+			$this->db->set('tgl_transfer', $curdatesage);
 			$this->db->where('no_sp2d', $no_sp2d);
 			$this->db->update('trduji');
 			return true;
