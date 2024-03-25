@@ -842,8 +842,8 @@ function get_token(){
 function kirimotp(){
 		ini_set('max_execution_time', -1);
 		ini_set('memory_limit', -1);
-		$data['no'] 	= $this->input->post('advice');
-		$data['otp'] 	= $this->input->post('otp');
+		$data['no'] 	= $this->security->xss_clean($this->input->post('advice'));
+		$data['otp'] 	= $this->security->xss_clean($this->input->post('otp'));
 		if (is_numeric($this->input->post('otp'))==false || is_numeric($this->input->post('otp'))!=1 ){
 			$msg = array(	'status'=>'gagal',
 							'sukses'=>$sukses,
@@ -877,22 +877,35 @@ function kirimotp(){
 		  CURLOPT_POSTFIELDS =>$datakirim,
 		  CURLOPT_HTTPHEADER => $headers,
 		));
-
-		//  $response = '{"status":true,"message":null,"maxPage":null,"perPage":null,"columns":null,"data":[{"sppd":[{"no":"5747/LS/2023","result":null,"message":"SUKSES","responseCode":"00","mpn":{"nomorSP2D":"5747/LS/2023","nomorSPM":"502/SPM/LS/5.02.0.00.0.00.01.0000/2023","tanggalTransaksi":"2023-08-10","referenceNo":"101300000144","kodeJenisTransaksi":"Transfer-OnUs","kodeOTP":null,"tx_id":"b132d2be-6c5a-4e7b-9825-2c2fb05ccee1","nominalTransaksi":"109800","detailPotonganMpn":[]}}],"ntp":[]}]}';
-		header('Content-Type: application/json');
+		
+		 header('Content-Type: application/json');
+		 
+		//  $response =  $this->advices_model->sampelresponse();
+		
+		
 		$response = curl_exec($curl);
 		$httpcode 	= curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		curl_close($curl);
 		// $httpcode = 200;
+
+		
 		
 		$date 		=  date('Y-m-d');
 		$output 	= json_decode($response);
+		// $output 	= $response;
 		$gagal		= 0;
 		$sukses		= 0;
 		$gagalp		= 0;
 		$pendingp 	= 0;
 		$pending 	= 0;
 		$suksesp 	= 0;
+		// var_dump($output);
+		// return;
+		// $last_update =  date('Y-m-d H:i:s');
+		// $query ="INSERT into log_sp2donline(datakirim,token,nomor,lastupdate) 
+        //             values(?, ?, ?, ?) ";
+		// $asg = $this->db->query($query, array($response,'OTP',$this->input->post('advice'),$last_update)); 
+		// var_dump($response);
 		if($httpcode != 200){
 			$msg = array(
 				'status'	=>false,
@@ -907,14 +920,13 @@ function kirimotp(){
 				'data'		=>null
 			);
 		}else{
-			// var_dump($output->data[0]);
-			if ($output->status===true || $output->status===1){
+			if ($output->status === true || $output->status===1){  //true
 				foreach ($output->data[0]->sppd as $hasil){
 					$no_sp2d = $hasil->no;
 					$result  = $hasil->responseCode;
 					$message = $hasil->message;
 					
-					if($result===00 || $result==='00'){
+					if($result=== 00 || $result==='00'){
 
 						$nouji 		= $this->advices_model->get_nouji($no_sp2d);
 						$nokasbud 	= $this->sp2d_model->get_no_kas_bud();
@@ -922,11 +934,12 @@ function kirimotp(){
 						$statusbud	= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 1 : 2; //2 : pending, 1 : Cair BUD
 						$status 	= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 2 : 4; //3 : gagal    4 : pending
 						$status_bank= $hasil->mpn->kodeJenisTransaksi == 'Transfer-OnUs' ? 4 : 2; //4 : sukses 	 2 : pending
+						$tanggalTransaksi = $hasil->mpn->tanggalTransaksi;
 						
 						// action1
 						$resultsp2d = $this->advices_model->updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d);
 						// action2
-						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d,$tanggalTransaksi);
 						// action3
 						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
 						// count sukses
@@ -963,11 +976,12 @@ function kirimotp(){
 						$statusbud	= 1;
 						$status 	= 4;
 						$status_bank= 2;
+						$tanggalTransaksi = '';
 						
 						// action1
 						$resultsp2d = $this->advices_model->updatesp2d($nokasbud,$nouji,$statusbud,$date,$no_sp2d);
 						// action2
-						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d,$tanggalTransaksi);
 						// action3
 						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
 						// count pending
@@ -1004,7 +1018,7 @@ function kirimotp(){
 						$status 	= 3;
 						$status_bank= 5;
 						// action2
-						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d);
+						$resultduji = $this->advices_model->detailuji($status,$message,$no_sp2d,'');
 						// action3
 						$resulthuji = $this->advices_model->headeruji($status_bank,$nouji);
 						// count gagal
@@ -1183,6 +1197,7 @@ public function status_payment_pajak() {
 						
 						$this->db->set('status', 2);
 						$this->db->set('ket_payment', $messageDetail);
+						$this->db->set('tgl_transfer', $tanggaltransaksi);
 						$this->db->where('no_sp2d', $nomorSP2D);
 						$this->db->update('trduji');
 
@@ -1441,36 +1456,38 @@ public function status_payment_pajak() {
 						
 						$this->db->set('status', 2);
 						$this->db->set('ket_payment', $messageDetail);
+						$this->db->set('tgl_transfer', $tanggaltransaksi);
 						$this->db->where('no_sp2d', $nomorSP2D);
 						$this->db->update('trduji');
 
 						$this->db->set('status_bank', 4);
 						$this->db->where('no_uji', $no_uji);
 						$query = $this->db->update('trhuji');
+						if(count($detailPotonganMpn) > 0){
+							foreach ($detailPotonganMpn  as $potonganMpn){
+								$idBilling = $potonganMpn->idBilling;
 						
-						foreach ($detailPotonganMpn  as $potonganMpn){
-							$idBilling = $potonganMpn->idBilling;
-					
-							$this->db->set('status_setor', 1);
-							$this->db->set('ntpn', $potonganMpn->ntpn);
-							$this->db->set('keterangan', $potonganMpn->messageDetail);
-							$this->db->where('idBilling', $idBilling);
-							$this->db->where('no_spm', $nomorSPM);
-							$this->db->update('trspmpot');
-						
+								$this->db->set('status_setor', 1);
+								$this->db->set('ntpn', $potonganMpn->ntpn);
+								$this->db->set('keterangan', $potonganMpn->messageDetail);
+								$this->db->where('idBilling', $idBilling);
+								$this->db->where('no_spm', $nomorSPM);
+								$this->db->update('trspmpot');
+							
+							}
 						}
-
-						foreach ($detailPotonganNonMpn  as $potonganNonMpn){
-							$kodeMap = $potonganNonMpn->kodeMap;
-
-							$this->db->set('status_setor', 1);
-							$this->db->set('keterangan', $potonganMpn->messageDetail);
-							$this->db->where('kd_rek6', $kodeMap);
-							$this->db->where('no_spm', $nomorSPM);
-							$this->db->update('trspmpot');
-						
+						if(count($detailPotonganNonMpn) >0){
+							foreach ($detailPotonganNonMpn  as $potonganNonMpn){
+								$kodeMap = $potonganNonMpn->kodeMap;
+	
+								$this->db->set('status_setor', 1);
+								$this->db->set('keterangan', $potonganNonMpn->messageDetail);
+								$this->db->where('map_pot', $kodeMap);
+								$this->db->where('no_spm', $nomorSPM);
+								$this->db->update('trspmpot');
+							
+							}
 						}
-
 						$data = array(
 							// 'idBilling' 	=>$idBilling,
 							'response_code' => $datasp2d->data[0]->response_code,

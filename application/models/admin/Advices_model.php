@@ -158,11 +158,11 @@
 			return true;
 		}
 
-		public function detailuji($status,$message,$no_sp2d){
+		public function detailuji($status,$message,$no_sp2d,$tanggalTransaksi){
 			$curdate	=	date('Y-m-d H:i:s');
 			$this->db->set('status', $status); //3 gagal 4 pending 
 			$this->db->set('ket_payment', $message);
-			$this->db->set('tgl_transfer', $curdatesage);
+			$this->db->set('tgl_transfer', $tanggalTransaksi);
 			$this->db->where('no_sp2d', $no_sp2d);
 			$this->db->update('trduji');
 			return true;
@@ -455,7 +455,68 @@
     function left($string, $count){
     return substr($string, 0, $count);
     }  
+	
+
+	public function sampelresponse()
+	{
+		$data = array(
+			'status' => true,
+			'message' => null,
+			'maxPage' => null,
+			'perPage' => null,
+			'columns' => null,
+			'data' => array(
+				array(
+					'sppd' => array(
+						array(
+							'no' => '630/LS/2024',
+							'result' => null,
+							'message' => 'SUKSES',
+							'responseCode' => '00',
+							'mpn' => array(
+								'nomorSP2D' => '630/LS/2024',
+								'nomorSPM' => '21/SPM/LS/2.17.0.00.0.00.01.0000/2024',
+								'tanggalTransaksi' => '2024-03-07',
+								'referenceNo' => '101000076727',
+								'kodeJenisTransaksi' => 'Transfer-OnUs',
+								'kodeOTP' => null,
+								'tx_id' => 'c9f0c9ed-d78b-4fa1-a61a-58e1495a9963',
+								'nominalTransaksi' => '50808582',
+								'detailPotonganMpn' => array()
+							)
+						),
+						array(
+							'no' => '629/LS/2024',
+							'result' => null,
+							'message' => 'SUKSES',
+							'responseCode' => '00',
+							'mpn' => array(
+								'nomorSP2D' => '629/LS/2024',
+								'nomorSPM' => '20/SPM/LS/2.17.0.00.0.00.01.0000/2024',
+								'tanggalTransaksi' => '2024-03-07',
+								'referenceNo' => '101000076728',
+								'kodeJenisTransaksi' => 'Transfer-OnUs',
+								'kodeOTP' => null,
+								'tx_id' => '10e32994-0984-4894-bae1-5c3235dd5468',
+								'nominalTransaksi' => '19777205',
+								'detailPotonganMpn' => array()
+							)
+						)
+					),
+					'ntp' => array()
+				)
+			)
+		);
+
+		header('Content-Type: application/json');
+    	return json_encode($data);
+	}
 
 	}
+
+
+	
+
+	
 
 ?>	

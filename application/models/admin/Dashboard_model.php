@@ -52,8 +52,11 @@
 		}
 
 		public function get_pajak_pending(){
-			$this->db->where('keterangan', 'Transaksi Pending');
-			return $this->db->count_all_results('trspmpot');
+			$query = $this->db->query("select count(*) as jumlah from trspmpot a inner join trhspm b on a.no_spm=b.no_spm and a.kd_skpd=b.kd_skpd
+							  INNER JOIN trhspp c on b.no_spp=c.no_spp and b.kd_skpd=c.kd_skpd where (sp2d_batal is null OR sp2d_batal <> 1)
+							  and a.keterangan like '%pending%'
+			");
+			return $query->row()->jumlah;
 		}
 		public function get_pajak_sukses(){
 			$this->db->where('keterangan', 'SUKSES');
@@ -61,6 +64,8 @@
 		}
 		public function get_pajak_gagal(){
 			$this->db->or_where('keterangan', 'Error - Invalid payload request');
+			$this->db->or_where('keterangan', 'Time Out');
+			$this->db->or_where('keterangan', 'Error -  Server Time Out');
 			$this->db->or_where('keterangan', 'General Negative Response');
 			return $this->db->count_all_results('trspmpot');
 		}
